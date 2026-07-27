@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neighbourhood — Culmena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .alt{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;margin-top:90px}
+  .alt:first-of-type{margin-top:70px}
+  .alt .frame{aspect-ratio:4/3}
+  .alt .frame img{width:100%;height:100%;object-fit:cover}
+  .alt h3{font-size:clamp(26px,3vw,40px)}
+  .alt p{margin-top:16px;color:var(--muted);line-height:1.75;font-size:16.5px;max-width:460px}
+  .alt .num{font-family:'Fraunces',serif;font-size:15px;color:var(--terra);letter-spacing:.2em;margin-bottom:14px}
+  .alt.flip .frame{order:2}
+  @media(max-width:900px){.alt,.alt.flip{grid-template-columns:1fr;gap:24px;margin-top:48px}.alt.flip .frame{order:0}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">CULMENA</a>
+  <ul>
+    <li><a class="nl active" href="neighbourhood.html">Neighbourhood</a></li>
+    <li><a class="nl" href="homes.html">Homes</a></li>
+    <li><a class="nl" href="floorplans.html">Floorplans</a></li>
+    <li><a class="reg" href="#register">Register</a></li>
+  </ul>
+</nav>
+
+<header class="hero" style="height:74vh">
+  <div class="media"><img src="assets/img/10-shops.png" alt="Neighbourhood high street near Culmena"></div>
+  <div class="shade"></div>
+  <span class="tag">AI concept imagery — demo</span>
+  <div class="hero-inner">
+    <h1 class="display">
+      <span class="ln"><span>Minutes from</span></span>
+      <span class="ln"><span><i>everything.</i></span></span>
+    </h1>
+    <p class="sub">Steps from nothing you don't love. Trails, schools, shops and transit — all within an easy walk of your front door.</p>
+  </div>
+  <span class="scrollcue">Scroll</span>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="kicker reveal">The Neighbourhood</div>
+    <h2 class="title display reveal d1">Where daily life<br>feels like a <i>walk in the park.</i></h2>
+
+    <div class="alt">
+      <div class="frame reveal"><img src="assets/img/09-trails.png" alt="Forest trails" loading="lazy"></div>
+      <div class="reveal d1">
+        <div class="num">01 — Nature</div>
+        <h3 class="display">Trails &amp; parkland</h3>
+        <p>Evergreen forest paths begin where the neighbourhood ends. Morning runs, weekend hikes and after-dinner strolls — the outdoors is your second living room.</p>
+      </div>
+    </div>
+
+    <div class="alt flip">
+      <div class="frame reveal"><img src="assets/img/10-shops.png" alt="Local shops and cafés" loading="lazy"></div>
+      <div class="reveal d1">
+        <div class="num">02 — Local life</div>
+        <h3 class="display">Shops, cafés &amp; services</h3>
+        <p>A tree-lined high street with independent cafés, everyday essentials and local favourites — the kind of main street that makes errands feel optional.</p>
+      </div>
+    </div>
+
+    <div class="alt">
+      <div class="frame reveal"><img src="assets/img/11-transit.png" alt="Modern transit stop" loading="lazy"></div>
+      <div class="reveal d1">
+        <div class="num">03 — Connected</div>
+        <h3 class="display">Transit at your door</h3>
+        <p>Frequent connections put the city centre, employment hubs and the airport within easy reach — leave the car at home and still be everywhere on time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>Return to <em>calm</em> —</span><span>Culmena —</span><span>Now <em>registering</em> —</span><span>2, 3 &amp; 4 bedroom townhomes —</span>
+    <span>Return to <em>calm</em> —</span><span>Culmena —</span><span>Now <em>registering</em> —</span><span>2, 3 &amp; 4 bedroom townhomes —</span>
+  </div>
+</div>
+
+<div class="register" id="register">
+  <div class="glow"></div>
+  <div class="wrap inner">
+    <div>
+      <h2 class="display reveal">Be first<br>to <i>call it home.</i></h2>
+      <p class="reveal d1">Register today for priority access to floorplans, pricing and preview events. Registration is free and without obligation.</p>
+      <p class="reveal d2" style="margin-top:26px"><b style="color:#fff">Presentation Centre</b><br>Open daily 12–5pm (closed Thu &amp; Fri)<br>Mitchel Street &amp; Gislason Avenue<br>555.010.2026 · hello@culmena-demo.ca</p>
+    </div>
+    <form data-demo class="reveal d1">
+      <input placeholder="First name" required>
+      <input placeholder="Last name" required>
+      <input class="full" type="email" placeholder="Email address" required>
+      <input class="full" type="tel" placeholder="Phone (optional)">
+      <button type="submit">Register now</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <span><b>CULMENA</b> — Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
+  <span class="fl"><a href="neighbourhood.html">Neighbourhood</a><a href="homes.html">Homes</a><a href="floorplans.html">Floorplans</a></span>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

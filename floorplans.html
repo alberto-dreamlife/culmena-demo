@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Floorplans — Culmena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .page-head{background:var(--forest);color:#fff;padding:190px 0 90px;position:relative;overflow:hidden}
+  .page-head .glow{position:absolute;width:700px;height:700px;border-radius:50%;
+    background:radial-gradient(circle,rgba(217,164,74,.16),transparent 65%);top:-260px;right:-180px}
+  .page-head h1{font-size:clamp(44px,6.5vw,92px);line-height:1}
+  .page-head p{margin-top:20px;color:#BFD3D0;font-size:17px;max-width:560px;line-height:1.7}
+
+  /* filters */
+  .fp-tools{display:flex;gap:12px;flex-wrap:wrap;margin-top:56px}
+  .filter{border:1.5px solid var(--forest);background:transparent;color:var(--forest);font-weight:700;
+    font-size:13px;letter-spacing:.04em;padding:12px 22px;border-radius:99px;cursor:pointer;
+    display:flex;align-items:center;gap:9px;transition:all .3s ease;font-family:'Inter',sans-serif}
+  .filter:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(31,67,72,.14)}
+  .filter .dot{width:11px;height:11px;border-radius:3px}
+  .filter.on{background:var(--forest);color:#fff}
+  .filter.clear{border-color:#B8B0A0;color:#8D867A}
+
+  /* siteplan board */
+  .board{background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden;margin-top:26px;
+    box-shadow:0 30px 80px rgba(31,67,72,.08)}
+  .board-head{display:flex;justify-content:space-between;align-items:center;padding:18px 26px;border-bottom:1px solid var(--line)}
+  .board-head h3{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .hint{font-size:12.5px;color:#9b958b}
+  .site-holder svg{display:block;width:100%;height:auto}
+  .hs{fill:transparent;stroke:transparent;cursor:pointer;transition:fill .15s ease}
+  .hs.filtered{fill:rgba(217,164,74,.5);stroke:rgba(160,115,35,.9);stroke-width:1}
+  .hs:hover{fill:rgba(231,111,81,.55);stroke:#B34A2F;stroke-width:1.5}
+  .legend-note{margin-top:16px;font-size:12.5px;color:#9b958b}
+
+  /* tooltip */
+  .tip{position:fixed;z-index:60;background:var(--forest);color:#fff;font-size:13px;font-weight:600;
+    padding:8px 14px;border-radius:10px;pointer-events:none;display:none;white-space:nowrap;
+    box-shadow:0 6px 18px rgba(0,0,0,.25)}
+
+  /* modal */
+  .modal{position:fixed;inset:0;z-index:100;background:rgba(12,24,24,.62);backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;padding:22px}
+  .modal.open{display:flex}
+  .modal-card{background:#fff;border-radius:22px;max-width:960px;width:100%;max-height:92vh;overflow:auto;
+    box-shadow:0 30px 90px rgba(0,0,0,.4);animation:pop .22s cubic-bezier(.2,.7,.2,1)}
+  @keyframes pop{from{transform:scale(.95) translateY(14px);opacity:0}to{transform:none;opacity:1}}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 26px;
+    border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}
+  .modal-head .ptype{color:var(--terra);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+  .modal-head h3{font-family:'Fraunces',serif;font-weight:500;font-size:26px;margin-top:2px}
+  .modal-x{border:0;background:var(--sand);width:40px;height:40px;border-radius:50%;font-size:17px;cursor:pointer;
+    font-weight:700;color:var(--ink);flex-shrink:0;transition:all .3s ease}
+  .modal-x:hover{background:var(--terra);color:#fff;transform:rotate(90deg)}
+  .modal-body{padding:8px 16px}
+  .modal-body img{width:100%;object-fit:contain;max-height:62vh}
+  .modal-meta{padding:14px 26px 24px}
+  .stats{display:flex;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .stat{flex:1;text-align:center;padding:13px 6px;background:#fff}
+  .stat+.stat{border-left:1px solid var(--line)}
+  .stat b{display:block;font-size:17px}
+  .stat small{font-size:10.5px;color:#9b958b;letter-spacing:.08em;text-transform:uppercase}
+  .cta{display:flex;gap:12px;margin-top:16px}
+  .cta .btn{flex:1;justify-content:center;padding:14px 10px}
+</style>
+</head>
+<body>
+
+<nav class="solid">
+  <a class="logo" href="index.html">CULMENA</a>
+  <ul>
+    <li><a class="nl" href="neighbourhood.html">Neighbourhood</a></li>
+    <li><a class="nl" href="homes.html">Homes</a></li>
+    <li><a class="nl active" href="floorplans.html">Floorplans</a></li>
+    <li><a class="reg" href="#register">Register</a></li>
+  </ul>
+</nav>
+
+<header class="page-head">
+  <div class="glow"></div>
+  <div class="wrap">
+    <h1 class="display"><span class="ln" style="display:block;overflow:hidden"><span style="display:block;transform:translateY(110%);animation:lineUp 1s cubic-bezier(.2,.7,.2,1) forwards">Find your home</span></span>
+    <span class="ln" style="display:block;overflow:hidden"><span style="display:block;transform:translateY(110%);animation:lineUp 1s .15s cubic-bezier(.2,.7,.2,1) forwards">on the <i>siteplan.</i></span></span></h1>
+    <p>107 homes across 27 unique plans, from 1,066 to 1,894 sq.ft. Filter by home type, then click any home to open its floorplan.</p>
+  </div>
+</header>
+
+<section style="padding-top:0">
+  <div class="wrap" style="max-width:1560px">
+    <div class="fp-tools">
+      <button class="filter" data-cat="4bed"><span class="dot" style="background:#2E5E63"></span>4 Bedroom + 3.5 Bath <span id="n4"></span></button>
+      <button class="filter" data-cat="3bed"><span class="dot" style="background:#7FA8A8"></span>3 Bedroom + 2.5 Bath <span id="n3"></span></button>
+      <button class="filter" data-cat="2bed"><span class="dot" style="background:#BFD9D6"></span>2 Bedroom + Den + 2.5 Bath <span id="n2"></span></button>
+      <button class="filter clear" data-cat="none">Clear</button>
+    </div>
+
+    <div class="board reveal in">
+      <div class="board-head"><h3>Siteplan</h3><span class="hint">Hover a home · click to open its floorplan</span></div>
+      <div class="site-holder">
+        <svg id="siteSvg" viewBox="0 0 1224 792" aria-label="Culmena siteplan">
+          <image href="assets/siteplan-1.png" x="0" y="0" width="1224" height="792"/>
+          <g id="hotspots"></g>
+        </svg>
+      </div>
+    </div>
+    <p class="legend-note">Floorplans are draft V10 and approximate. Siteplan V8. E.&amp;O.E. — for demonstration purposes. <a href="assets/Culmena-Floorplans.pdf" target="_blank" style="color:var(--forest);font-weight:600">Download all plans (PDF)</a></p>
+  </div>
+
+  <div class="tip" id="tip"></div>
+
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <div class="ptype" id="mPlan"></div>
+          <h3 id="mUnit"></h3>
+        </div>
+        <button class="modal-x" id="mClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body"><img id="mImg" src="" alt="Floorplan"></div>
+      <div class="modal-meta">
+        <div class="stats">
+          <div class="stat"><b id="mBed"></b><small>Bed</small></div>
+          <div class="stat"><b id="mBath"></b><small>Bath</small></div>
+          <div class="stat"><b id="mSqft"></b><small>Approx. Sq.Ft.</small></div>
+        </div>
+        <div class="cta">
+          <a class="btn btn-dark" id="mDl" href="#" download>Download this plan</a>
+          <a class="btn btn-light" href="assets/Culmena-Floorplans.pdf" target="_blank">All plans (PDF)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="register" id="register">
+  <div class="glow"></div>
+  <div class="wrap inner">
+    <div>
+      <h2 class="display reveal">Be first<br>to <i>call it home.</i></h2>
+      <p class="reveal d1">Register today for priority access to floorplans, pricing and preview events. Registration is free and without obligation.</p>
+      <p class="reveal d2" style="margin-top:26px"><b style="color:#fff">Presentation Centre</b><br>Open daily 12–5pm (closed Thu &amp; Fri)<br>Mitchel Street &amp; Gislason Avenue<br>555.010.2026 · hello@culmena-demo.ca</p>
+    </div>
+    <form data-demo class="reveal d1">
+      <input placeholder="First name" required>
+      <input placeholder="Last name" required>
+      <input class="full" type="email" placeholder="Email address" required>
+      <input class="full" type="tel" placeholder="Phone (optional)">
+      <button type="submit">Register now</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <span><b>CULMENA</b> — Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
+  <span class="fl"><a href="neighbourhood.html">Neighbourhood</a><a href="homes.html">Homes</a><a href="floorplans.html">Floorplans</a></span>
+</footer>
+
+<script src="assets/units.js"></script>
+<script src="assets/site.js"></script>
+<script>
+const CAT = {
+  "4bed": {bed:"4", bath:"3.5", label:"4 Bedroom + 3.5 Bath"},
+  "3bed": {bed:"3", bath:"2.5", label:"3 Bedroom + 2.5 Bath"},
+  "2bed": {bed:"2 + Den", bath:"2.5", label:"2 Bedroom + Den + 2.5 Bath"}
+};
+const planDisplay = p => p.replace(/^(B[0-9]?)([ab])$/, "$1($2)");
+
+/* build hotspots */
+const g = document.getElementById("hotspots");
+const NS = "http://www.w3.org/2000/svg";
+UNITS.forEach(u=>{
+  const r = document.createElementNS(NS,"rect");
+  r.setAttribute("x", u.x - u.w/2);
+  r.setAttribute("y", u.y - u.h/2);
+  r.setAttribute("width", u.w);
+  r.setAttribute("height", u.h);
+  r.setAttribute("transform", `rotate(${u.a} ${u.x} ${u.y})`);
+  r.setAttribute("class","hs");
+  g.appendChild(r);
+  u.el = r;
+});
+
+/* counts */
+document.getElementById("n4").textContent = "("+UNITS.filter(u=>u.c==="4bed").length+")";
+document.getElementById("n3").textContent = "("+UNITS.filter(u=>u.c==="3bed").length+")";
+document.getElementById("n2").textContent = "("+UNITS.filter(u=>u.c==="2bed").length+")";
+
+/* tooltip + modal */
+const tip = document.getElementById("tip");
+const modal = document.getElementById("modal");
+
+function openModal(u){
+  document.getElementById("mPlan").textContent = "Plan " + planDisplay(u.p) + " · " + CAT[u.c].label;
+  document.getElementById("mUnit").textContent = "Home " + u.u;
+  document.getElementById("mImg").src = `assets/plans/${u.p}.png`;
+  document.getElementById("mBed").textContent = CAT[u.c].bed;
+  document.getElementById("mBath").textContent = CAT[u.c].bath;
+  document.getElementById("mSqft").textContent = u.s;
+  const dl = document.getElementById("mDl");
+  dl.href = `assets/plans/${u.p}.png`;
+  dl.setAttribute("download", `Culmena-Plan-${planDisplay(u.p)}.png`);
+  modal.classList.add("open");
+  tip.style.display = "none";
+}
+function closeModal(){ modal.classList.remove("open"); }
+modal.addEventListener("click", e => { if(e.target === modal) closeModal(); });
+document.getElementById("mClose").addEventListener("click", closeModal);
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeModal(); });
+
+UNITS.forEach(u=>{
+  u.el.addEventListener("mouseenter", ()=>{
+    tip.textContent = "Home " + u.u + " · Plan " + planDisplay(u.p) + " · " + CAT[u.c].bed + " Bed";
+    tip.style.display = "block";
+  });
+  u.el.addEventListener("mousemove", e=>{
+    tip.style.left = (e.clientX + 16) + "px";
+    tip.style.top  = (e.clientY - 12) + "px";
+  });
+  u.el.addEventListener("mouseleave", ()=>{ tip.style.display = "none"; });
+  u.el.addEventListener("click", ()=> openModal(u));
+});
+
+/* legend filters */
+let activeCat = null;
+document.querySelectorAll(".filter").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const cat = btn.dataset.cat;
+    document.querySelectorAll(".filter").forEach(b=>b.classList.remove("on"));
+    if(cat === "none" || cat === activeCat){
+      activeCat = null;
+      UNITS.forEach(u=>u.el.classList.remove("filtered"));
+      return;
+    }
+    activeCat = cat;
+    btn.classList.add("on");
+    UNITS.forEach(u=>u.el.classList.toggle("filtered", u.c === cat));
+  });
+});
+</script>
+</body>
+</html>

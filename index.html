@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Culmena — A New Multiplex Community</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .fullbleed-break{height:78vh;min-height:420px}
+  .fullbleed-break img{width:100%;height:100%;object-fit:cover}
+  .intro-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:60px;align-items:end}
+  @media(max-width:900px){.intro-grid{grid-template-columns:1fr;gap:28px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">CULMENA</a>
+  <ul>
+    <li><a class="nl" href="neighbourhood.html">Neighbourhood</a></li>
+    <li><a class="nl" href="homes.html">Homes</a></li>
+    <li><a class="nl" href="floorplans.html">Floorplans</a></li>
+    <li><a class="reg" href="#register">Register</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="media"><img src="assets/img/01-hero.png" alt="Culmena townhomes at golden hour"></div>
+  <div class="shade"></div>
+  <span class="tag">AI concept imagery — demo</span>
+  <div class="hero-inner">
+    <h1 class="display">
+      <span class="ln"><span>Life, gathered</span></span>
+      <span class="ln"><span>around <i>the green.</i></span></span>
+    </h1>
+    <p class="sub">A collection of 107 multiplex townhomes — two, three and four bedroom homes wrapped around courtyards, amenity spaces and tree-lined lanes.</p>
+  </div>
+  <span class="scrollcue">Scroll</span>
+</header>
+
+<!-- INTRO -->
+<section>
+  <div class="wrap">
+    <div class="intro-grid">
+      <div>
+        <div class="kicker reveal">Welcome to Culmena</div>
+        <h2 class="title display reveal d1">Rooted in nature.<br>Designed for <i>living well.</i></h2>
+      </div>
+      <p class="lead reveal d2">Set between Mitchel Street and Rosenburg Way, Culmena balances quiet residential calm with everyday convenience — homes shaped by light, landscape and a genuine sense of neighbourhood.</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat-big reveal"><b><span data-count="107">0</span></b><small>Homes in the collection</small></div>
+      <div class="stat-big reveal d1"><b><span data-count="27">0</span></b><small>Unique floorplans</small></div>
+      <div class="stat-big reveal d2"><b>2–4</b><small>Bedroom homes</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- FULL-BLEED BREAK -->
+<div class="bleed fullbleed-break reveal">
+  <img src="assets/img/03-courtyard.png" alt="Landscaped courtyard between townhomes" loading="lazy">
+  <span class="cap">Courtyard living — AI concept image</span>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>Return to <em>calm</em> —</span><span>Culmena —</span><span>Now <em>registering</em> —</span><span>2, 3 &amp; 4 bedroom townhomes —</span>
+    <span>Return to <em>calm</em> —</span><span>Culmena —</span><span>Now <em>registering</em> —</span><span>2, 3 &amp; 4 bedroom townhomes —</span>
+  </div>
+</div>
+
+<!-- TEASERS -->
+<section>
+  <div class="wrap">
+    <div class="kicker reveal">Explore</div>
+    <h2 class="title display reveal d1">Find your <i>place</i> here.</h2>
+    <div class="teasers">
+      <a class="tease reveal" href="neighbourhood.html">
+        <img src="assets/img/09-trails.png" alt="Forest trails near Culmena" loading="lazy">
+        <span class="go">→</span>
+        <span class="tx"><small>01</small><h3>Neighbourhood</h3></span>
+      </a>
+      <a class="tease reveal d1" href="homes.html">
+        <img src="assets/img/02-homes-exterior.png" alt="Culmena home exteriors" loading="lazy">
+        <span class="go">→</span>
+        <span class="tx"><small>02</small><h3>Homes</h3></span>
+      </a>
+      <a class="tease reveal d2" href="floorplans.html">
+        <img src="assets/img/08-picnic-garden.png" alt="Culmena siteplan and floorplans" loading="lazy">
+        <span class="go">→</span>
+        <span class="tx"><small>03</small><h3>Floorplans</h3></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<div class="register" id="register">
+  <div class="glow"></div>
+  <div class="wrap inner">
+    <div>
+      <h2 class="display reveal">Be first<br>to <i>call it home.</i></h2>
+      <p class="reveal d1">Register today for priority access to floorplans, pricing and preview events. Registration is free and without obligation.</p>
+      <p class="reveal d2" style="margin-top:26px"><b style="color:#fff">Presentation Centre</b><br>Open daily 12–5pm (closed Thu &amp; Fri)<br>Mitchel Street &amp; Gislason Avenue<br>555.010.2026 · hello@culmena-demo.ca</p>
+    </div>
+    <form data-demo class="reveal d1">
+      <input placeholder="First name" required>
+      <input placeholder="Last name" required>
+      <input class="full" type="email" placeholder="Email address" required>
+      <input class="full" type="tel" placeholder="Phone (optional)">
+      <button type="submit">Register now</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <span><b>CULMENA</b> — Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
+  <span class="fl"><a href="neighbourhood.html">Neighbourhood</a><a href="homes.html">Homes</a><a href="floorplans.html">Floorplans</a></span>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
