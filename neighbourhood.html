@@ -4,35 +4,109 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Neighbourhood — Culmena</title>
+<meta name="description" content="Trails, schools, shops and transit — all within an easy walk of your front door at Culmena.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
 <style>
-  .alt{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;margin-top:90px}
-  .alt:first-of-type{margin-top:70px}
-  .alt .frame{aspect-ratio:4/3}
-  .alt .frame img{width:100%;height:100%;object-fit:cover}
-  .alt h3{font-size:clamp(26px,3vw,40px)}
-  .alt p{margin-top:16px;color:var(--muted);line-height:1.75;font-size:16.5px;max-width:460px}
-  .alt .num{font-family:'Fraunces',serif;font-size:15px;color:var(--terra);letter-spacing:.2em;margin-bottom:14px}
-  .alt.flip .frame{order:2}
-  @media(max-width:900px){.alt,.alt.flip{grid-template-columns:1fr;gap:24px;margin-top:48px}.alt.flip .frame{order:0}}
+  /* ---- varied editorial grid (RK: break the left-image/right-text loop) ---- */
+  .nb{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap);
+      margin-top:clamp(52px,7vw,120px)}
+  .nb .num{font-family:'Fraunces',serif;font-size:14px;color:var(--terra);
+      letter-spacing:.2em;margin-bottom:14px;text-transform:uppercase}
+  .nb h3{font-size:clamp(25px,2.9vw,42px);line-height:1.08}
+  .nb p{margin-top:16px;color:var(--muted);line-height:1.78;font-size:clamp(15.5px,1.1vw,17px);max-width:46ch}
+
+  /* hover growth — lifts the frame and pushes the image past the crop */
+  .grow{transition:transform .6s cubic-bezier(.2,.7,.2,1),box-shadow .6s ease}
+  .grow img{transition:transform 1.15s cubic-bezier(.2,.7,.2,1)}
+  .grow:hover{transform:translateY(-10px);box-shadow:0 32px 70px rgba(31,67,72,.20)}
+  .grow:hover img{transform:scale(1.075)}
+
+  /* 01 — wide hero image, text hung to the right and dropped low */
+  .nb-01 .fig{grid-column:1/8;aspect-ratio:16/10}
+  .nb-01 .txt{grid-column:9/13;align-self:end;padding-bottom:8px}
+
+  /* 02 — text first, then a mismatched pair of portraits */
+  .nb-02 .txt{grid-column:1/5;align-self:center}
+  .nb-02 .figA{grid-column:6/9;aspect-ratio:3/4}
+  .nb-02 .figB{grid-column:9/13;aspect-ratio:4/5;margin-top:clamp(30px,5vw,74px)}
+
+  /* 03 — full-width cinematic strip with the copy set into it */
+  .nb-03 .fig{grid-column:1/13;aspect-ratio:21/9;border-radius:24px}
+  .nb-03 .fig::after{content:"";position:absolute;inset:0;
+      background:linear-gradient(90deg,rgba(8,20,20,.82) 0%,rgba(8,20,20,.45) 42%,transparent 72%)}
+  .nb-03 .over{position:absolute;z-index:2;left:clamp(24px,4vw,64px);bottom:clamp(24px,4vw,58px);
+      right:clamp(24px,4vw,64px);max-width:34ch;color:#fff}
+  .nb-03 .over p{color:#D6E3E1}
+  .nb-03 .over .num{color:var(--amber)}
+
+  /* quick facts */
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap);
+      margin-top:clamp(56px,7vw,110px)}
+  .fact{background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px 26px;
+      transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s ease,border-color .5s ease}
+  .fact:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 26px 60px rgba(31,67,72,.14);
+      border-color:transparent}
+  .fact b{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,3vw,44px);
+      display:block;line-height:1}
+  .fact span{display:block;margin-top:10px;font-size:13px;color:var(--muted);line-height:1.5}
+
+  @media(max-width:1024px){
+    .nb-01 .fig,.nb-01 .txt,.nb-02 .txt,.nb-03 .fig{grid-column:1/13}
+    .nb-02 .figA{grid-column:1/7}
+    .nb-02 .figB{grid-column:7/13;margin-top:0}
+    .nb-01 .txt{align-self:start;margin-top:6px}
+    .facts{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:640px){
+    .nb-02 .figA,.nb-02 .figB{grid-column:1/13}
+    .nb-03 .fig{aspect-ratio:4/5}
+    .nb-03 .fig::after{background:linear-gradient(to top,rgba(8,20,20,.88) 0%,rgba(8,20,20,.3) 60%)}
+    .facts{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
 
 <nav>
-  <a class="logo" href="index.html">CULMENA</a>
-  <ul>
-    <li><a class="nl active" href="neighbourhood.html">Neighbourhood</a></li>
-    <li><a class="nl" href="homes.html">Homes</a></li>
-    <li><a class="nl" href="floorplans.html">Floorplans</a></li>
-    <li><a class="reg" href="#register">Register</a></li>
-  </ul>
+  <div class="nav-in">
+    <a class="logo" href="index.html">CULMENA</a>
+    <ul>
+      <li><a class="nl" href="homes.html">Homes</a></li>
+      <li><a class="nl" href="floorplans.html">Floor Plans</a></li>
+      <li><a class="nl active" href="neighbourhood.html">Neighbourhood</a></li>
+      <li><a class="nl" href="gallery.html">Gallery</a></li>
+      <li><a class="reg" href="#register">Register</a></li>
+    </ul>
+    <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
 </nav>
 
-<header class="hero" style="height:74vh">
-  <div class="media"><img src="assets/img/10-shops.png" alt="Neighbourhood high street near Culmena"></div>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <a href="homes.html">Homes</a>
+  <a href="floorplans.html">Floor Plans</a>
+  <a href="neighbourhood.html">Neighbourhood</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="#register">Register</a>
+  <div class="d-meta">
+    Presentation Centre · Open daily 12–5pm<br>
+    Mitchel Street &amp; Gislason Avenue<br>
+    555.010.2026
+  </div>
+</div>
+
+<header class="hero sub">
+  <div class="media">
+    <img src="assets/img/10-shops.png" alt="Neighbourhood high street near Culmena">
+    <video data-loop autoplay muted loop playsinline preload="auto" poster="assets/img/10-shops.png">
+      <source src="assets/video/neighbourhood-loop.webm" type="video/webm">
+      <source src="assets/video/neighbourhood-loop.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="shade"></div>
   <span class="tag">AI concept imagery — demo</span>
   <div class="hero-inner">
@@ -40,7 +114,7 @@
       <span class="ln"><span>Minutes from</span></span>
       <span class="ln"><span><i>everything.</i></span></span>
     </h1>
-    <p class="sub">Steps from nothing you don't love. Trails, schools, shops and transit — all within an easy walk of your front door.</p>
+    <p class="sub-copy">Steps from nothing you don't love. Trails, schools, shops and transit — all within an easy walk of your front door.</p>
   </div>
   <span class="scrollcue">Scroll</span>
 </header>
@@ -50,39 +124,68 @@
     <div class="kicker reveal">The Neighbourhood</div>
     <h2 class="title display reveal d1">Where daily life<br>feels like a <i>walk in the park.</i></h2>
 
-    <div class="alt">
-      <div class="frame reveal"><img src="assets/img/09-trails.png" alt="Forest trails" loading="lazy"></div>
-      <div class="reveal d1">
+    <!-- 01 -->
+    <div class="nb nb-01">
+      <div class="fig frame grow reveal">
+        <img src="assets/img/09-trails.png" alt="Forest trails beside the community" loading="lazy">
+        <span class="cap">Evergreen trail network — AI concept image</span>
+      </div>
+      <div class="txt reveal d1">
         <div class="num">01 — Nature</div>
         <h3 class="display">Trails &amp; parkland</h3>
         <p>Evergreen forest paths begin where the neighbourhood ends. Morning runs, weekend hikes and after-dinner strolls — the outdoors is your second living room.</p>
       </div>
     </div>
 
-    <div class="alt flip">
-      <div class="frame reveal"><img src="assets/img/10-shops.png" alt="Local shops and cafés" loading="lazy"></div>
-      <div class="reveal d1">
+    <!-- 02 -->
+    <div class="nb nb-02">
+      <div class="txt reveal">
         <div class="num">02 — Local life</div>
-        <h3 class="display">Shops, cafés &amp; services</h3>
+        <h3 class="display">Shops, cafés<br>&amp; services</h3>
         <p>A tree-lined high street with independent cafés, everyday essentials and local favourites — the kind of main street that makes errands feel optional.</p>
+      </div>
+      <div class="figA frame grow reveal d1">
+        <img src="assets/img/10-shops.png" alt="Local shops and cafés" loading="lazy">
+      </div>
+      <div class="figB frame grow reveal d2">
+        <img src="assets/img/08-picnic-garden.png" alt="Neighbourhood garden and picnic space" loading="lazy">
       </div>
     </div>
 
-    <div class="alt">
-      <div class="frame reveal"><img src="assets/img/11-transit.png" alt="Modern transit stop" loading="lazy"></div>
-      <div class="reveal d1">
-        <div class="num">03 — Connected</div>
-        <h3 class="display">Transit at your door</h3>
-        <p>Frequent connections put the city centre, employment hubs and the airport within easy reach — leave the car at home and still be everywhere on time.</p>
+    <!-- 03 -->
+    <div class="nb nb-03">
+      <div class="fig frame grow reveal">
+        <img src="assets/img/11-transit.png" alt="Modern transit stop near Culmena" loading="lazy">
+        <div class="over">
+          <div class="num">03 — Connected</div>
+          <h3 class="display">Transit at your door</h3>
+          <p>Frequent connections put the city centre, employment hubs and the airport within easy reach — leave the car at home and still be everywhere on time.</p>
+        </div>
       </div>
+    </div>
+
+    <!-- quick facts -->
+    <div class="facts">
+      <div class="fact reveal"><b>4</b><span>Minutes to the nearest transit exchange</span></div>
+      <div class="fact reveal d1"><b>8</b><span>Minutes on foot to the high street</span></div>
+      <div class="fact reveal d2"><b>3</b><span>Schools within a 10-minute walk</span></div>
+      <div class="fact reveal d3"><b>12</b><span>Kilometres of connected forest trail</span></div>
     </div>
   </div>
 </section>
 
-<div class="marquee" aria-hidden="true">
-  <div class="track">
-    <span>Return to <em>calm</em> —</span><span>Culmena —</span><span>Now <em>registering</em> —</span><span>2, 3 &amp; 4 bedroom townhomes —</span>
-    <span>Return to <em>calm</em> —</span><span>Culmena —</span><span>Now <em>registering</em> —</span><span>2, 3 &amp; 4 bedroom townhomes —</span>
+<!-- STATEMENT BAND — replaces the old scrolling marquee -->
+<div class="statement">
+  <div class="media">
+    <img src="assets/img/03-courtyard.png" alt="" aria-hidden="true" loading="lazy">
+    <video data-loop autoplay muted loop playsinline preload="none" aria-hidden="true">
+      <source src="assets/video/statement-loop.webm" type="video/webm">
+      <source src="assets/video/statement-loop.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="st-in reveal">
+    <q>Everything close by. <i>Nothing</i> in the way.</q>
+    <small>Now registering · 2, 3 &amp; 4 bedroom townhomes</small>
   </div>
 </div>
 
@@ -95,18 +198,26 @@
       <p class="reveal d2" style="margin-top:26px"><b style="color:#fff">Presentation Centre</b><br>Open daily 12–5pm (closed Thu &amp; Fri)<br>Mitchel Street &amp; Gislason Avenue<br>555.010.2026 · hello@culmena-demo.ca</p>
     </div>
     <form data-demo class="reveal d1">
-      <input placeholder="First name" required>
-      <input placeholder="Last name" required>
-      <input class="full" type="email" placeholder="Email address" required>
-      <input class="full" type="tel" placeholder="Phone (optional)">
+      <input placeholder="First name" aria-label="First name" required>
+      <input placeholder="Last name" aria-label="Last name" required>
+      <input class="full" type="email" placeholder="Email address" aria-label="Email address" required>
+      <input class="full" type="tel" placeholder="Phone (optional)" aria-label="Phone">
       <button type="submit">Register now</button>
+      <p class="consent">By registering you agree to receive project updates from Culmena. You can unsubscribe at any time.</p>
     </form>
   </div>
 </div>
 
 <footer>
-  <span><b>CULMENA</b> — Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
-  <span class="fl"><a href="neighbourhood.html">Neighbourhood</a><a href="homes.html">Homes</a><a href="floorplans.html">Floorplans</a></span>
+  <div class="wrap f-in">
+    <span><b>CULMENA</b> — Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
+    <span class="fl">
+      <a href="homes.html">Homes</a>
+      <a href="floorplans.html">Floor Plans</a>
+      <a href="neighbourhood.html">Neighbourhood</a>
+      <a href="gallery.html">Gallery</a>
+    </span>
+  </div>
 </footer>
 
 <script src="assets/site.js"></script>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery — Culmena</title>
+<meta name="description" content="Renderings of Culmena — exteriors, interiors, amenities and the surrounding neighbourhood.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* filter pills */
+  .gal-tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:clamp(26px,3vw,40px)}
+  .gfilter{border:1.5px solid var(--forest);background:transparent;color:var(--forest);font-weight:700;
+    font-size:12.5px;letter-spacing:.04em;padding:11px 22px;border-radius:99px;cursor:pointer;
+    font-family:'Inter',sans-serif;
+    transition:background .3s ease,color .3s ease,transform .3s ease,box-shadow .3s ease}
+  .gfilter:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(31,67,72,.14)}
+  .gfilter.on{background:var(--forest);color:#fff}
+
+  /* masonry — varied image sizes by design */
+  .gal{columns:3;column-gap:var(--gap)}
+  .g{break-inside:avoid;margin-bottom:var(--gap);border-radius:18px;overflow:hidden;
+    position:relative;cursor:zoom-in;display:block;
+    transition:transform .55s cubic-bezier(.2,.7,.2,1),box-shadow .55s ease,opacity .35s ease}
+  .g img{width:100%;display:block;transition:transform 1.15s cubic-bezier(.2,.7,.2,1)}
+  .g:hover{transform:translateY(-8px);box-shadow:0 28px 62px rgba(31,67,72,.20)}
+  .g:hover img{transform:scale(1.06)}
+  .g::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity .45s ease;
+    background:linear-gradient(to top,rgba(8,18,18,.66),transparent 46%)}
+  .g:hover::after{opacity:1}
+  .g .meta{position:absolute;left:20px;right:20px;bottom:16px;z-index:2;color:#fff;
+    opacity:0;transform:translateY(10px);
+    transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1)}
+  .g:hover .meta{opacity:1;transform:none}
+  .g .meta b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:19px}
+  .g .meta small{font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
+  .g .zi{position:absolute;top:16px;right:16px;z-index:2;width:40px;height:40px;border-radius:50%;
+    background:rgba(255,255,255,.18);backdrop-filter:blur(6px);color:#fff;display:grid;
+    place-items:center;font-size:15px;opacity:0;transform:scale(.8);
+    transition:opacity .4s ease,transform .4s ease}
+  .g:hover .zi{opacity:1;transform:none}
+  .g.hide{display:none}
+  @media(max-width:1100px){.gal{columns:2}}
+  @media(max-width:640px){.gal{columns:1}}
+</style>
+</head>
+<body>
+
+<nav class="solid">
+  <div class="nav-in">
+    <a class="logo" href="index.html">CULMENA</a>
+    <ul>
+      <li><a class="nl" href="homes.html">Homes</a></li>
+      <li><a class="nl" href="floorplans.html">Floor Plans</a></li>
+      <li><a class="nl" href="neighbourhood.html">Neighbourhood</a></li>
+      <li><a class="nl active" href="gallery.html">Gallery</a></li>
+      <li><a class="reg" href="#register">Register</a></li>
+    </ul>
+    <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+</nav>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <a href="homes.html">Homes</a>
+  <a href="floorplans.html">Floor Plans</a>
+  <a href="neighbourhood.html">Neighbourhood</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="#register">Register</a>
+  <div class="d-meta">
+    Presentation Centre · Open daily 12–5pm<br>
+    Mitchel Street &amp; Gislason Avenue<br>
+    555.010.2026
+  </div>
+</div>
+
+<header class="page-head">
+  <div class="glow"></div>
+  <div class="wrap">
+    <h1 class="display">
+      <span class="ln"><span>The Culmena</span></span>
+      <span class="ln"><span><i>gallery.</i></span></span>
+    </h1>
+    <p>Exteriors, interiors, amenities and the neighbourhood beyond. Click any image to open it full-screen — use the arrows or swipe to move through the set.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="gal-tools">
+      <button class="gfilter on" data-f="all">All</button>
+      <button class="gfilter" data-f="exterior">Exteriors</button>
+      <button class="gfilter" data-f="interior">Interiors</button>
+      <button class="gfilter" data-f="amenity">Amenities</button>
+      <button class="gfilter" data-f="hood">Neighbourhood</button>
+    </div>
+
+    <div class="gal" id="gal">
+      <a class="g reveal" data-gal data-cat="exterior" data-title="Life around the green"
+         data-caption="The central green at golden hour, framed by the townhome blocks.">
+        <img src="assets/img/01-hero.png" alt="Culmena townhomes around the central green" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Exteriors</small><b>Life around the green</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="exterior" data-title="Street-level exterior"
+         data-caption="Contemporary facade with black window frames and warm wood accents.">
+        <img src="assets/img/02-homes-exterior.png" alt="Culmena home exteriors" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Exteriors</small><b>Street-level exterior</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="exterior" data-title="Courtyard living"
+         data-caption="Landscaped courtyards set a nature-centric scene between buildings.">
+        <img src="assets/img/03-courtyard.png" alt="Landscaped courtyard between townhomes" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Exteriors</small><b>Courtyard living</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="interior" data-title="Scheme One — Haven"
+         data-caption="Soft oak tones, pale quartz and brushed nickel. Calm, bright and easy to live with.">
+        <img src="assets/img/04-kitchen-light-scheme.png" alt="Haven light scheme kitchen" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Interiors</small><b>Scheme One — Haven</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="interior" data-title="Scheme Two — Ridge"
+         data-caption="Deep slate cabinetry, smoked oak and matte black. Moody, modern and grounded.">
+        <img src="assets/img/05-kitchen-dark-scheme.png" alt="Ridge dark scheme kitchen" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Interiors</small><b>Scheme Two — Ridge</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="amenity" data-title="Kitchen &amp; lounge"
+         data-caption="The shared social heart of the amenity building.">
+        <img src="assets/img/06-amenity-lounge.png" alt="Shared kitchen and lounge" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Amenities</small><b>Kitchen &amp; lounge</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="amenity" data-title="Kids' play area"
+         data-caption="A sheltered play space at the centre of the community.">
+        <img src="assets/img/07-kids-play-area.png" alt="Kids play area" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Amenities</small><b>Kids' play area</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="amenity" data-title="Picnic &amp; garden"
+         data-caption="Outdoor tables and planting beds for slow evenings and loud birthdays.">
+        <img src="assets/img/08-picnic-garden.png" alt="Picnic and garden space" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Amenities</small><b>Picnic &amp; garden</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="hood" data-title="Trails &amp; parkland"
+         data-caption="Evergreen forest paths begin where the neighbourhood ends.">
+        <img src="assets/img/09-trails.png" alt="Forest trails" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Neighbourhood</small><b>Trails &amp; parkland</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="hood" data-title="Shops &amp; cafés"
+         data-caption="A tree-lined high street with independent cafés and everyday essentials.">
+        <img src="assets/img/10-shops.png" alt="Local shops and cafés" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Neighbourhood</small><b>Shops &amp; cafés</b></span>
+      </a>
+      <a class="g reveal" data-gal data-cat="hood" data-title="Transit at your door"
+         data-caption="Frequent connections to the city centre, employment hubs and the airport.">
+        <img src="assets/img/11-transit.png" alt="Modern transit stop" loading="lazy">
+        <span class="zi">⤢</span>
+        <span class="meta"><small>Neighbourhood</small><b>Transit at your door</b></span>
+      </a>
+    </div>
+
+    <p class="legend-note" style="margin-top:26px;font-size:12.5px;color:#9b958b">
+      All imagery is AI-generated concept art for demonstration purposes and is not a representation of the final product. E.&amp;O.E.
+    </p>
+  </div>
+</section>
+
+<div class="register" id="register">
+  <div class="glow"></div>
+  <div class="wrap inner">
+    <div>
+      <h2 class="display reveal">Be first<br>to <i>call it home.</i></h2>
+      <p class="reveal d1">Register today for priority access to floorplans, pricing and preview events. Registration is free and without obligation.</p>
+      <p class="reveal d2" style="margin-top:26px"><b style="color:#fff">Presentation Centre</b><br>Open daily 12–5pm (closed Thu &amp; Fri)<br>Mitchel Street &amp; Gislason Avenue<br>555.010.2026 · hello@culmena-demo.ca</p>
+    </div>
+    <form data-demo class="reveal d1">
+      <input placeholder="First name" aria-label="First name" required>
+      <input placeholder="Last name" aria-label="Last name" required>
+      <input class="full" type="email" placeholder="Email address" aria-label="Email address" required>
+      <input class="full" type="tel" placeholder="Phone (optional)" aria-label="Phone">
+      <button type="submit">Register now</button>
+      <p class="consent">By registering you agree to receive project updates from Culmena. You can unsubscribe at any time.</p>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap f-in">
+    <span><b>CULMENA</b> — Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
+    <span class="fl">
+      <a href="homes.html">Homes</a>
+      <a href="floorplans.html">Floor Plans</a>
+      <a href="neighbourhood.html">Neighbourhood</a>
+      <a href="gallery.html">Gallery</a>
+    </span>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+<script>
+/* Gallery lightbox — rebuilds the set from whatever is currently visible,
+   so next/prev never walks into a filtered-out image. */
+const tiles = [...document.querySelectorAll("[data-gal]")];
+
+function visibleSet(){
+  return tiles.filter(t => !t.classList.contains("hide"));
+}
+tiles.forEach(t => {
+  t.addEventListener("click", e => {
+    e.preventDefault();
+    const vis = visibleSet();
+    const items = vis.map(n => ({
+      src: n.querySelector("img").src,
+      title: n.dataset.title,
+      caption: n.dataset.caption
+    }));
+    Lightbox.open(items, vis.indexOf(t));
+  });
+});
+
+/* filters */
+document.querySelectorAll(".gfilter").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const f = btn.dataset.f;
+    document.querySelectorAll(".gfilter").forEach(b => b.classList.toggle("on", b === btn));
+    tiles.forEach(t => t.classList.toggle("hide", f !== "all" && t.dataset.cat !== f));
+  });
+});
+</script>
+</body>
+</html>

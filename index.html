@@ -4,31 +4,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Culmena — A New Multiplex Community</title>
+<meta name="description" content="Culmena — a collection of 107 multiplex townhomes with two, three and four bedroom homes wrapped around courtyards and tree-lined lanes. Now registering.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
 <style>
-  .fullbleed-break{height:78vh;min-height:420px}
-  .fullbleed-break img{width:100%;height:100%;object-fit:cover}
-  .intro-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:60px;align-items:end}
-  @media(max-width:900px){.intro-grid{grid-template-columns:1fr;gap:28px}}
+  .intro-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(28px,4vw,60px);align-items:end}
+  @media(max-width:900px){.intro-grid{grid-template-columns:1fr;gap:24px}}
+  .fullbleed-break{height:clamp(340px,72vh,760px)}
 </style>
 </head>
 <body>
 
 <nav>
-  <a class="logo" href="index.html">CULMENA</a>
-  <ul>
-    <li><a class="nl" href="neighbourhood.html">Neighbourhood</a></li>
-    <li><a class="nl" href="homes.html">Homes</a></li>
-    <li><a class="nl" href="floorplans.html">Floorplans</a></li>
-    <li><a class="reg" href="#register">Register</a></li>
-  </ul>
+  <div class="nav-in">
+    <a class="logo" href="index.html">CULMENA</a>
+    <ul>
+      <li><a class="nl" href="homes.html">Homes</a></li>
+      <li><a class="nl" href="floorplans.html">Floor Plans</a></li>
+      <li><a class="nl" href="neighbourhood.html">Neighbourhood</a></li>
+      <li><a class="nl" href="gallery.html">Gallery</a></li>
+      <li><a class="reg" href="#register">Register</a></li>
+    </ul>
+    <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
 </nav>
 
-<!-- HERO -->
+<div class="drawer" id="drawer" aria-hidden="true">
+  <a href="homes.html">Homes</a>
+  <a href="floorplans.html">Floor Plans</a>
+  <a href="neighbourhood.html">Neighbourhood</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="#register">Register</a>
+  <div class="d-meta">
+    Presentation Centre · Open daily 12–5pm<br>
+    Mitchel Street &amp; Gislason Avenue<br>
+    555.010.2026
+  </div>
+</div>
+
+<!-- HERO — video-ready: drop assets/video/hero-loop.mp4 in and it takes over -->
 <header class="hero">
-  <div class="media"><img src="assets/img/01-hero.png" alt="Culmena townhomes at golden hour"></div>
+  <div class="media">
+    <img src="assets/img/01-hero.png" alt="Culmena townhomes at golden hour">
+    <video data-loop autoplay muted loop playsinline preload="auto" poster="assets/img/01-hero.png">
+      <source src="assets/video/hero-loop.webm" type="video/webm">
+      <source src="assets/video/hero-loop.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="shade"></div>
   <span class="tag">AI concept imagery — demo</span>
   <div class="hero-inner">
@@ -36,7 +62,7 @@
       <span class="ln"><span>Life, gathered</span></span>
       <span class="ln"><span>around <i>the green.</i></span></span>
     </h1>
-    <p class="sub">A collection of 107 multiplex townhomes — two, three and four bedroom homes wrapped around courtyards, amenity spaces and tree-lined lanes.</p>
+    <p class="sub-copy">A collection of 107 multiplex townhomes — two, three and four bedroom homes wrapped around courtyards, amenity spaces and tree-lined lanes.</p>
   </div>
   <span class="scrollcue">Scroll</span>
 </header>
@@ -65,11 +91,18 @@
   <span class="cap">Courtyard living — AI concept image</span>
 </div>
 
-<!-- MARQUEE -->
-<div class="marquee" aria-hidden="true">
-  <div class="track">
-    <span>Return to <em>calm</em> —</span><span>Culmena —</span><span>Now <em>registering</em> —</span><span>2, 3 &amp; 4 bedroom townhomes —</span>
-    <span>Return to <em>calm</em> —</span><span>Culmena —</span><span>Now <em>registering</em> —</span><span>2, 3 &amp; 4 bedroom townhomes —</span>
+<!-- STATEMENT BAND — replaces the old scrolling marquee -->
+<div class="statement">
+  <div class="media">
+    <img src="assets/img/09-trails.png" alt="" aria-hidden="true" loading="lazy">
+    <video data-loop autoplay muted loop playsinline preload="none" aria-hidden="true">
+      <source src="assets/video/statement-loop.webm" type="video/webm">
+      <source src="assets/video/statement-loop.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="st-in reveal">
+    <q>A place to <i>return</i> to, not just somewhere to live.</q>
+    <small>Now registering · 2, 3 &amp; 4 bedroom townhomes</small>
   </div>
 </div>
 
@@ -79,20 +112,25 @@
     <div class="kicker reveal">Explore</div>
     <h2 class="title display reveal d1">Find your <i>place</i> here.</h2>
     <div class="teasers">
-      <a class="tease reveal" href="neighbourhood.html">
-        <img src="assets/img/09-trails.png" alt="Forest trails near Culmena" loading="lazy">
-        <span class="go">→</span>
-        <span class="tx"><small>01</small><h3>Neighbourhood</h3></span>
-      </a>
-      <a class="tease reveal d1" href="homes.html">
+      <a class="tease reveal" href="homes.html">
         <img src="assets/img/02-homes-exterior.png" alt="Culmena home exteriors" loading="lazy">
         <span class="go">→</span>
-        <span class="tx"><small>02</small><h3>Homes</h3></span>
+        <span class="tx"><small>01</small><h3>Homes</h3></span>
       </a>
-      <a class="tease reveal d2" href="floorplans.html">
+      <a class="tease reveal d1" href="floorplans.html">
         <img src="assets/img/08-picnic-garden.png" alt="Culmena siteplan and floorplans" loading="lazy">
         <span class="go">→</span>
-        <span class="tx"><small>03</small><h3>Floorplans</h3></span>
+        <span class="tx"><small>02</small><h3>Floor Plans</h3></span>
+      </a>
+      <a class="tease reveal d2" href="neighbourhood.html">
+        <img src="assets/img/09-trails.png" alt="Forest trails near Culmena" loading="lazy">
+        <span class="go">→</span>
+        <span class="tx"><small>03</small><h3>Neighbourhood</h3></span>
+      </a>
+      <a class="tease reveal d3" href="gallery.html">
+        <img src="assets/img/06-amenity-lounge.png" alt="Culmena gallery" loading="lazy">
+        <span class="go">→</span>
+        <span class="tx"><small>04</small><h3>Gallery</h3></span>
       </a>
     </div>
   </div>
@@ -108,18 +146,26 @@
       <p class="reveal d2" style="margin-top:26px"><b style="color:#fff">Presentation Centre</b><br>Open daily 12–5pm (closed Thu &amp; Fri)<br>Mitchel Street &amp; Gislason Avenue<br>555.010.2026 · hello@culmena-demo.ca</p>
     </div>
     <form data-demo class="reveal d1">
-      <input placeholder="First name" required>
-      <input placeholder="Last name" required>
-      <input class="full" type="email" placeholder="Email address" required>
-      <input class="full" type="tel" placeholder="Phone (optional)">
+      <input placeholder="First name" aria-label="First name" required>
+      <input placeholder="Last name" aria-label="Last name" required>
+      <input class="full" type="email" placeholder="Email address" aria-label="Email address" required>
+      <input class="full" type="tel" placeholder="Phone (optional)" aria-label="Phone">
       <button type="submit">Register now</button>
+      <p class="consent">By registering you agree to receive project updates from Culmena. You can unsubscribe at any time.</p>
     </form>
   </div>
 </div>
 
 <footer>
-  <span><b>CULMENA</b> — Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
-  <span class="fl"><a href="neighbourhood.html">Neighbourhood</a><a href="homes.html">Homes</a><a href="floorplans.html">Floorplans</a></span>
+  <div class="wrap f-in">
+    <span><b>CULMENA</b> — Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
+    <span class="fl">
+      <a href="homes.html">Homes</a>
+      <a href="floorplans.html">Floor Plans</a>
+      <a href="neighbourhood.html">Neighbourhood</a>
+      <a href="gallery.html">Gallery</a>
+    </span>
+  </div>
 </footer>
 
 <script src="assets/site.js"></script>
