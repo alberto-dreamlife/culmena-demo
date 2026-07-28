@@ -105,6 +105,7 @@ document.querySelectorAll("form[data-demo]").forEach(f =>
 const Lightbox = (() => {
   let items = [], i = 0, el = null, img = null, capEl = null, countEl = null;
   let scale = 1, tx = 0, ty = 0, dragging = false, sx = 0, sy = 0, px = 0, py = 0;
+  let baseW = 0, baseH = 0, moved = false;
   const MAXS = 4;
 
   function build() {
@@ -134,29 +135,36 @@ const Lightbox = (() => {
       if (e.target === el || e.target.classList.contains("lb-stage")) close();
     });
 
-    /* click to toggle zoom */
+    /* click to toggle zoom — skipped if the pointer was dragged, otherwise
+       every pan would end in a click that resets the zoom */
     img.addEventListener("click", e => {
       e.stopPropagation();
+      if (moved) { moved = false; return; }
       if (scale > 1) { reset(); } else { zoomAt(2.2, e); }
     });
 
-    /* wheel zoom */
+    /* wheel zoom, anchored on the cursor */
     el.addEventListener("wheel", e => {
       e.preventDefault();
       const next = clamp(scale * (e.deltaY < 0 ? 1.16 : 0.86), 1, MAXS);
-      if (next === 1) reset(); else { scale = next; applyT(); }
+      if (next === 1) { reset(); return; }
+      zoomAt(next, e);
     }, { passive: false });
 
     /* drag to pan */
     img.addEventListener("pointerdown", e => {
       if (scale <= 1) return;
-      dragging = true; img.classList.add("grabbing");
+      e.preventDefault();
+      dragging = true; moved = false; img.classList.add("grabbing");
       sx = e.clientX; sy = e.clientY; px = tx; py = ty;
       img.setPointerCapture(e.pointerId);
     });
     img.addEventListener("pointermove", e => {
       if (!dragging) return;
-      tx = px + (e.clientX - sx); ty = py + (e.clientY - sy); applyT();
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+      tx = px + dx; ty = py + dy;
+      clampT(); applyT();
     });
     const endDrag = () => { dragging = false; img.classList.remove("grabbing"); };
     img.addEventListener("pointerup", endDrag);
@@ -183,28 +191,68 @@ const Lightbox = (() => {
   }
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  /* Size of the image with no transform applied. Panning limits are derived
+     from this, so they have to be measured while the transform is off. */
+  function measure() {
+    const prev = img.style.transform;
+    img.style.transform = "none";
+    const r = img.getBoundingClientRect();
+    baseW = r.width; baseH = r.height;
+    img.style.transform = prev;
+  }
+
+  /* Keep the image reachable: you can always pan far enough to bring any
+     edge into view (plus a little slack so the bottom clears the caption),
+     but never so far that it drifts off into empty space. */
+  function clampT() {
+    const st = el.querySelector(".lb-stage").getBoundingClientRect();
+    const slack = 90;
+    const mx = Math.max(0, (baseW * scale - st.width) / 2) + slack;
+    const my = Math.max(0, (baseH * scale - st.height) / 2) + slack;
+    tx = clamp(tx, -mx, mx);
+    ty = clamp(ty, -my, my);
+  }
+
   const applyT = () => {
     img.classList.toggle("zoomed", scale > 1);
+    el.classList.toggle("is-zoomed", scale > 1);
     img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
   };
   const reset = () => { scale = 1; tx = 0; ty = 0; applyT(); };
 
+  /* Anchor the zoom on the pointer: a point sitting ox from the centre lands
+     at ox*s after scaling, so it needs translating back by -ox*(s-1) to stay
+     put. (Dividing by s here is what pulled the plan off-centre.) */
   function zoomAt(s, e) {
-    const r = img.getBoundingClientRect();
-    const ox = e.clientX - (r.left + r.width / 2);
-    const oy = e.clientY - (r.top + r.height / 2);
-    scale = s; tx = -ox * (s - 1) / s; ty = -oy * (s - 1) / s;
-    applyT();
+    if (!baseW) measure();
+    const stage = el.querySelector(".lb-stage").getBoundingClientRect();
+    const centreX = stage.left + stage.width / 2;
+    const centreY = stage.top + stage.height / 2;
+    /* offset of the cursor from the image centre, in untransformed units */
+    const ox = (e.clientX - centreX - tx) / scale;
+    const oy = (e.clientY - centreY - ty) / scale;
+    scale = s;
+    tx = -ox * (s - 1);
+    ty = -oy * (s - 1);
+    clampT(); applyT();
   }
 
   function render() {
     const it = items[i];
     reset();
+    baseW = baseH = 0;
     img.style.opacity = 0;
+    const show = () => {
+      img.src = it.src;
+      img.style.opacity = 1;
+      /* measure once the browser has laid the new image out */
+      requestAnimationFrame(() => requestAnimationFrame(measure));
+    };
     const pre = new Image();
-    pre.onload = () => { img.src = it.src; img.style.opacity = 1; };
+    pre.onload = show;
     pre.src = it.src;
-    if (pre.complete) { img.src = it.src; img.style.opacity = 1; }
+    if (pre.complete) show();
     img.alt = it.title || "";
     capEl.innerHTML = (it.title ? `<b>${it.title}</b>` : "") + (it.caption || "");
     countEl.textContent = items.length > 1 ? `${i + 1} / ${items.length}` : "";

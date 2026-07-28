@@ -303,9 +303,14 @@ footer .fl a:hover{color:#fff}
   display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .3s ease}
 .lb.open{display:flex}
 .lb.show{opacity:1}
-.lb-stage{position:relative;width:100%;height:100%;display:grid;place-items:center;
+/* flex, not grid: a grid row sized `auto` leaves the item's max-height:100%
+   with nothing definite to resolve against, so the image overflowed the
+   stage at 1x and the bottom of the sheet was already off screen. */
+.lb-stage{position:relative;width:100%;height:100%;display:flex;
+  align-items:center;justify-content:center;
   padding:clamp(56px,8vh,90px) clamp(16px,6vw,96px);overflow:hidden}
-.lb-stage img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;
+.lb-stage img{max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;border-radius:6px;
   box-shadow:0 30px 90px rgba(0,0,0,.5);cursor:zoom-in;
   transition:transform .34s cubic-bezier(.2,.7,.2,1),opacity .28s ease;
   transform-origin:center;user-select:none;-webkit-user-drag:none}
@@ -332,7 +337,19 @@ footer .fl a:hover{color:#fff}
   background:rgba(10,22,22,.86);backdrop-filter:blur(10px);padding:11px 17px;border-radius:99px}
 .lb-zoomhint{position:absolute;top:clamp(14px,2.4vh,26px);left:clamp(14px,2.4vw,30px);z-index:3;
   font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9FB8B5;
-  background:rgba(255,255,255,.08);padding:8px 15px;border-radius:99px;backdrop-filter:blur(8px)}
+  background:rgba(255,255,255,.08);padding:8px 15px;border-radius:99px;backdrop-filter:blur(8px);
+  transition:opacity .25s ease}
+
+/* While zoomed, get the chrome out of the way — the caption plate otherwise
+   sits over the bottom-left of the drawing, which is exactly where the lower
+   level of a floor plan lives. */
+.lb.is-zoomed .lb-bar,
+.lb.is-zoomed .lb-zoomhint,
+.lb.is-zoomed .lb-prev,
+.lb.is-zoomed .lb-next{opacity:0;pointer-events:none}
+.lb-prev,.lb-next,.lb-bar{transition:opacity .25s ease}
+/* NB: never change .lb-stage padding on zoom — it would resize the image's
+   own layout box mid-transform and throw the pan maths out. */
 @media(max-width:700px){
   .lb-prev,.lb-next{width:44px;height:44px;margin-top:-22px;font-size:18px}
   .lb-zoomhint{display:none}
