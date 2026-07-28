@@ -29,8 +29,9 @@
   .board-head h3{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
   .hint{font-size:12.5px;color:#9b958b}
   .site-holder svg{display:block;width:100%;height:auto}
-  .hs{fill:transparent;stroke:transparent;cursor:pointer;transition:fill .15s ease}
-  .hs.filtered{fill:rgba(217,164,74,.5);stroke:rgba(160,115,35,.9);stroke-width:1}
+  .hs{fill:transparent;stroke:transparent;stroke-width:1;stroke-linejoin:round;
+    cursor:pointer;transition:fill .18s ease,stroke .18s ease}
+  .hs.filtered{fill:rgba(217,164,74,.5);stroke:rgba(160,115,35,.9)}
   .hs:hover{fill:rgba(231,111,81,.55);stroke:#B34A2F;stroke-width:1.5}
   .legend-note{margin-top:16px;font-size:12.5px;color:#9b958b;line-height:1.6}
 
@@ -217,19 +218,18 @@ const CAT = {
 };
 const planDisplay = p => p.replace(/^(B[0-9]?)([ab])$/, "$1($2)");
 
-/* build hotspots */
+/* Build hotspots as true polygons tracing each building footprint —
+   points come straight out of the siteplan's vector geometry, so the
+   highlight follows every notch and entry recess instead of approximating
+   the unit with a rotated box. */
 const g = document.getElementById("hotspots");
 const NS = "http://www.w3.org/2000/svg";
 UNITS.forEach(u=>{
-  const r = document.createElementNS(NS,"rect");
-  r.setAttribute("x", u.x - u.w/2);
-  r.setAttribute("y", u.y - u.h/2);
-  r.setAttribute("width", u.w);
-  r.setAttribute("height", u.h);
-  r.setAttribute("transform", `rotate(${u.a} ${u.x} ${u.y})`);
-  r.setAttribute("class","hs");
-  g.appendChild(r);
-  u.el = r;
+  const el = document.createElementNS(NS,"polygon");
+  el.setAttribute("points", u.pts);
+  el.setAttribute("class","hs");
+  g.appendChild(el);
+  u.el = el;
 });
 
 /* counts */
