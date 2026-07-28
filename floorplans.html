@@ -169,7 +169,7 @@
           <div class="stat"><b id="mSqft"></b><small>Approx. Sq.Ft.</small></div>
         </div>
         <div class="cta">
-          <a class="btn btn-dark" id="mDl" href="#" download>Download this plan</a>
+          <a class="btn btn-dark" id="mDl" href="#" download>Download this plan (PDF)</a>
           <a class="btn btn-light" href="assets/Culmena-Floorplans.pdf" target="_blank" rel="noopener">All plans (PDF)</a>
         </div>
       </div>
@@ -246,13 +246,14 @@ function openModal(u){
   current = u;
   document.getElementById("mPlan").textContent = "Plan " + planDisplay(u.p) + " · " + CAT[u.c].label;
   document.getElementById("mUnit").textContent = "Home " + u.u;
-  document.getElementById("mImg").src = `assets/plans/${u.p}.png`;
+  document.getElementById("mImg").src = `assets/plans/${u.p}.webp`;
   document.getElementById("mBed").textContent = CAT[u.c].bed;
   document.getElementById("mBath").textContent = CAT[u.c].bath;
   document.getElementById("mSqft").textContent = u.s;
+  /* download the vector PDF, not a screenshot of it */
   const dl = document.getElementById("mDl");
-  dl.href = `assets/plans/${u.p}.png`;
-  dl.setAttribute("download", `Culmena-Plan-${planDisplay(u.p)}.png`);
+  dl.href = `assets/plans/${u.p}.pdf`;
+  dl.setAttribute("download", `Culmena-Plan-${planDisplay(u.p)}.pdf`);
   modal.classList.add("open");
   tip.style.display = "none";
 }
@@ -268,7 +269,7 @@ document.addEventListener("keydown", e => {
 document.getElementById("mZoom").addEventListener("click", () => {
   if(!current) return;
   Lightbox.open([{
-    src: `assets/plans/${current.p}.png`,
+    src: `assets/plans/${current.p}.webp`,
     title: `Home ${current.u} · Plan ${planDisplay(current.p)}`,
     caption: `${CAT[current.c].label} · approx. ${current.s} sq.ft. — click or scroll to zoom, drag to pan.`
   }], 0);
