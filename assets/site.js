@@ -93,7 +93,7 @@ if (counters.length) {
 document.querySelectorAll("form[data-demo]").forEach(f =>
   f.addEventListener("submit", e => {
     e.preventDefault();
-    alert("Demo only — no data is sent.");
+    alert("Demo only, no data is sent.");
   }));
 
 /* ============================================================
@@ -300,3 +300,22 @@ window.Lightbox = Lightbox;
     n.addEventListener("click", e => { e.preventDefault(); Lightbox.open(items, idx); });
   });
 })();
+
+/* Safari on iOS tints the status bar with theme-color, so it has to follow the
+   nav: dark while the nav floats over the hero, paper once the nav goes solid.
+   Left alone it stays dark and leaves a black band above a cream header. */
+{
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const navEl = document.querySelector("nav");
+  if (meta && navEl) {
+    const DARK = "#1F4348", LIGHT = "#FAF7F1";
+    const sync = () => {
+      const solid = navEl.classList.contains("solid") ||
+                    document.body.classList.contains("menu-open");
+      meta.setAttribute("content", solid ? LIGHT : DARK);
+    };
+    new MutationObserver(sync).observe(navEl, { attributes: true, attributeFilter: ["class"] });
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    sync();
+  }
+}
