@@ -294,26 +294,87 @@ h2.title{font-size:clamp(32px,4.4vw,66px);line-height:1.05;max-width:15ch}
 /* ---------- REGISTER ---------- */
 /* RK: pad the breakpoints so nothing touches the edge, and keep the form
    on the same alignment line as the nav + footer. */
-.register{background:var(--forest);color:#fff;position:relative;overflow:hidden}
-.register .glow{position:absolute;width:min(640px,90vw);height:min(640px,90vw);border-radius:50%;
-  background:radial-gradient(circle,rgba(217,164,74,.22),transparent 65%);
-  top:-180px;right:-140px;pointer-events:none}
-.register .inner{position:relative;display:grid;grid-template-columns:1.05fr 1fr;
-  gap:clamp(36px,4.5vw,80px);padding-block:var(--band);align-items:start}
-.register h2{font-size:clamp(32px,4.2vw,60px);line-height:1.05}
-.register p{margin-top:18px;color:#BFD3D0;line-height:1.7;max-width:46ch}
-.register form{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-content:start}
-.register input{width:100%;padding:16px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.18);
-  font-size:15px;font-family:inherit;background:rgba(255,255,255,.07);color:#fff;
-  transition:border-color .3s ease,background .3s ease}
-.register input::placeholder{color:#9FB8B5}
-.register input:focus{outline:none;border-color:var(--amber);background:rgba(255,255,255,.12)}
-.register input.full,.register button{grid-column:1/-1}
-.register button{background:var(--amber);color:#33260B;border:0;padding:17px;border-radius:12px;
-  font-weight:800;font-size:15px;letter-spacing:.04em;cursor:pointer;font-family:inherit;
-  transition:background .3s ease,transform .3s ease}
-.register button:hover{background:#fff;transform:translateY(-2px)}
-.register .consent{margin-top:4px;font-size:11.5px;line-height:1.6;color:#8FA9A6;grid-column:1/-1}
+/* ============================================================
+   REGISTER — four questions, one screen at a time
+   Every step is a real field inside a single <form>. Without JavaScript the
+   .steps-ready class is never added, all four sections stay stacked and the
+   form still submits, so nothing depends on the script to be usable.
+   ============================================================ */
+.register{background:var(--forest);color:#fff;position:relative;overflow:hidden;
+  padding-block:clamp(70px,9vw,140px)}
+.register .glow{position:absolute;width:min(760px,110vw);height:min(760px,110vw);border-radius:50%;
+  right:-14%;top:-34%;background:radial-gradient(circle,rgba(217,164,74,.22),transparent 64%);
+  pointer-events:none}
+.register .wrap{position:relative;z-index:2}
+.steps{max-width:900px;margin-inline:auto;text-align:center}
+
+.rail{display:flex;gap:9px;justify-content:center;margin-bottom:clamp(26px,3vw,40px)}
+.rail span{width:clamp(30px,5vw,54px);height:3px;background:rgba(255,255,255,.2);
+  transition:background .5s ease}
+.rail span.on{background:var(--amber)}
+
+.stepno{font-size:11.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#93A5A1}
+.q{font-size:clamp(30px,4.4vw,62px);line-height:1.06;margin-top:14px}
+.q i{color:var(--amber)}
+.hint{color:#A9B8B4;margin-top:14px;font-size:15.5px;max-width:52ch;margin-inline:auto}
+
+/* Sin JS todos los pasos se ven; con JS solo el activo */
+/* inset:0 would stretch every step to the stage height and make it impossible
+   to read a step's own height, which is what the height animation needs. */
+.steps-ready .stage{position:relative;min-height:clamp(240px,26vw,290px);
+  transition:min-height .5s cubic-bezier(.2,.7,.2,1)}
+.steps-ready .step{position:absolute;top:0;left:0;right:0;opacity:0;transform:translateY(20px);
+  pointer-events:none;transition:opacity .45s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+.steps-ready .step.on{position:relative;opacity:1;transform:none;pointer-events:auto}
+.step + .step{margin-top:clamp(40px,6vw,80px)}
+.steps-ready .step + .step{margin-top:0}
+
+.row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;max-width:640px;
+  margin:clamp(22px,3vw,34px) auto 0}
+.row.narrow{max-width:340px;margin-top:14px}
+.big{flex:1;min-width:220px;background:transparent;border:0;
+  border-bottom:2px solid rgba(255,255,255,.28);color:#fff;font-family:'Fraunces',Georgia,serif;
+  font-size:clamp(20px,2.4vw,32px);padding:12px 4px;text-align:center;outline:0;
+  transition:border-color .35s ease}
+.big::placeholder{color:rgba(255,255,255,.3)}
+.big:focus{border-color:var(--amber)}
+.small{width:100%;background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.2);
+  color:#fff;font-family:inherit;font-size:15px;padding:10px 4px;text-align:center;outline:0;
+  transition:border-color .35s ease}
+.small::placeholder{color:rgba(255,255,255,.34)}
+.small:focus{border-color:var(--amber)}
+
+.opts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:clamp(22px,3vw,34px)}
+.opt{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.28);font-family:inherit;
+  font-size:14px;font-weight:600;padding:15px 26px;cursor:pointer;border-radius:12px;
+  transition:background .3s,border-color .3s,color .3s,transform .3s}
+.opt:hover{transform:translateY(-3px);border-color:var(--amber)}
+.opt[aria-checked="true"]{background:var(--amber);border-color:var(--amber);color:#33260B}
+
+.nav{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;
+  margin-top:clamp(24px,3vw,34px)}
+.go{background:var(--amber);color:#33260B;border:0;font-family:inherit;font-size:13px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:18px 32px;border-radius:12px;
+  cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,background .3s}
+.go:hover{background:#fff;transform:translateY(-2px);box-shadow:0 14px 30px rgba(217,164,74,.3)}
+.back{background:transparent;color:#A9B8B4;border:0;font-family:inherit;font-size:13px;
+  font-weight:600;letter-spacing:.06em;padding:18px 14px;cursor:pointer;transition:color .3s}
+.back:hover{color:#fff}
+.err{min-height:20px;margin-top:12px;font-size:13.5px;color:#F0A58C}
+.consent{margin-top:20px;font-size:11.5px;line-height:1.6;color:#8FA9A6}
+
+.thanks{max-width:640px;margin-inline:auto;text-align:center;
+  animation:thanksIn .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes thanksIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+.tick{width:66px;height:66px;border-radius:50%;border:2px solid var(--amber);color:var(--amber);
+  display:grid;place-items:center;font-size:30px;margin:0 auto 22px}
+.thanks .back{margin-top:26px;border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:15px 26px}
+
+.regfoot{margin-top:clamp(52px,7vw,96px);padding-top:26px;border-top:1px solid rgba(255,255,255,.14);
+  display:grid;grid-template-columns:repeat(3,1fr);gap:22px;font-size:14px;color:#A9B8B4;line-height:1.6}
+.regfoot b{color:#fff;font-weight:600}
+@media(max-width:760px){.regfoot{grid-template-columns:1fr;text-align:center}
+  .nav{flex-direction:column-reverse}.nav .go,.nav .back{width:100%}}
 @media(max-width:900px){
   .register .inner{grid-template-columns:1fr;gap:36px}
   .register form{grid-template-columns:1fr}

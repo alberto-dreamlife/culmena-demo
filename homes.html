@@ -203,20 +203,88 @@
 
 <div class="register" id="register">
   <div class="glow"></div>
-  <div class="wrap inner">
-    <div>
-      <h2 class="display reveal">Be first<br>to <i>call it home.</i></h2>
-      <p class="reveal d1">Register today for priority access to floorplans, pricing and preview events. Registration is free and without obligation.</p>
-      <p class="reveal d2" style="margin-top:26px"><b style="color:#fff">Presentation Centre</b><br>Open daily 12–5pm (closed Thu &amp; Fri)<br>Mitchel Street &amp; Gislason Avenue<br>555.010.2026 · hello@culmena-demo.ca</p>
-    </div>
-    <form data-demo class="reveal d1">
-      <input placeholder="First name" aria-label="First name" required>
-      <input placeholder="Last name" aria-label="Last name" required>
-      <input class="full" type="email" placeholder="Email address" aria-label="Email address" required>
-      <input class="full" type="tel" placeholder="Phone (optional)" aria-label="Phone">
-      <button type="submit">Register now</button>
-      <p class="consent">By registering you agree to receive project updates from Culmena. You can unsubscribe at any time.</p>
+  <div class="wrap">
+    <!-- Four questions, one screen each. Every step is a real field inside one
+         form, so with JavaScript off the whole thing renders as an ordinary
+         stacked form and still submits. .steps-ready is added by the script and
+         is what collapses it down to one step at a time. -->
+    <form class="steps" data-demo novalidate>
+      <div class="rail" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+      <div class="stage">
+        <section class="step" data-step="0">
+          <p class="stepno">Step 01 of 04</p>
+          <h2 class="q display">What should we <i>call you?</i></h2>
+          <p class="hint">So the floor plans arrive with your name on them.</p>
+          <div class="row">
+            <input class="big" name="first" placeholder="First name" aria-label="First name" required>
+            <input class="big" name="last" placeholder="Last name" aria-label="Last name" required>
+          </div>
+          <p class="err" data-err></p>
+          <div class="nav"><button class="go" type="button" data-next>Continue &rarr;</button></div>
+        </section>
+
+        <section class="step" data-step="1">
+          <p class="stepno">Step 02 of 04</p>
+          <h2 class="q display">How many <i>bedrooms?</i></h2>
+          <p class="hint">We will only send you the plans that fit. There are 27 of them.</p>
+          <div class="opts" role="radiogroup" aria-label="Bedrooms">
+            <button class="opt" type="button" role="radio" aria-checked="false" data-pick="beds" data-value="2">Two</button>
+            <button class="opt" type="button" role="radio" aria-checked="false" data-pick="beds" data-value="3">Three</button>
+            <button class="opt" type="button" role="radio" aria-checked="false" data-pick="beds" data-value="4">Four</button>
+            <button class="opt" type="button" role="radio" aria-checked="false" data-pick="beds" data-value="any">Still deciding</button>
+          </div>
+          <input type="hidden" name="beds">
+          <p class="err" data-err></p>
+          <div class="nav"><button class="back" type="button" data-back>&larr; Back</button>
+            <button class="go" type="button" data-next>Continue &rarr;</button></div>
+        </section>
+
+        <section class="step" data-step="2">
+          <p class="stepno">Step 03 of 04</p>
+          <h2 class="q display">Working with a <i>realtor?</i></h2>
+          <p class="hint">It changes nothing about your registration. It only tells us who to copy.</p>
+          <div class="opts" role="radiogroup" aria-label="Realtor">
+            <button class="opt" type="button" role="radio" aria-checked="false" data-pick="realtor" data-value="no">Not represented</button>
+            <button class="opt" type="button" role="radio" aria-checked="false" data-pick="realtor" data-value="yes">Yes, represented</button>
+            <button class="opt" type="button" role="radio" aria-checked="false" data-pick="realtor" data-value="agent">I am a realtor</button>
+          </div>
+          <input type="hidden" name="realtor">
+          <p class="err" data-err></p>
+          <div class="nav"><button class="back" type="button" data-back>&larr; Back</button>
+            <button class="go" type="button" data-next>Continue &rarr;</button></div>
+        </section>
+
+        <section class="step" data-step="3">
+          <p class="stepno">Step 04 of 04</p>
+          <h2 class="q display">Where do we <i>send them?</i></h2>
+          <p class="hint">One email with the plans and the price list, then only when something real changes.</p>
+          <div class="row">
+            <input class="big" type="email" name="email" placeholder="you@email.com" aria-label="Email address" required>
+          </div>
+          <div class="row narrow">
+            <input class="small" type="tel" name="phone" placeholder="Phone (optional)" aria-label="Phone">
+          </div>
+          <p class="err" data-err></p>
+          <div class="nav"><button class="back" type="button" data-back>&larr; Back</button>
+            <button class="go" type="submit">Send me the plans &rarr;</button></div>
+          <p class="consent">Free and without obligation. You can unsubscribe at any time.</p>
+        </section>
+      </div>
     </form>
+
+    <div class="thanks" hidden>
+      <div class="tick" aria-hidden="true">&#10003;</div>
+      <h2 class="q display">You are on the <i>list.</i></h2>
+      <p class="hint" data-thanks-msg>The floor plans and the current price list are on their way.</p>
+      <button class="back" type="button" data-restart>Register someone else</button>
+    </div>
+
+    <div class="regfoot">
+      <div><b>Presentation Centre</b><br>Open daily 12&ndash;5pm (closed Thu &amp; Fri)</div>
+      <div><b>Where</b><br>Mitchel Street &amp; Gislason Avenue</div>
+      <div><b>Talk to us</b><br>555.010.2026 &middot; hello@culmena-demo.ca</div>
+    </div>
   </div>
 </div>
 

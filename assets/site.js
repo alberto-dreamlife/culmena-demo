@@ -89,12 +89,112 @@ if (counters.length) {
   counters.forEach(el => cio.observe(el));
 }
 
-/* ---------- demo register form ---------- */
-document.querySelectorAll("form[data-demo]").forEach(f =>
-  f.addEventListener("submit", e => {
+/* ============================================================
+   REGISTER — one question per screen
+   The markup ships as a plain stacked form. Only once this runs does it fold
+   into steps, so a script failure leaves a working form rather than three
+   hidden sections and no way to reach them.
+   ============================================================ */
+document.querySelectorAll("form.steps").forEach(form => {
+  const steps = [...form.querySelectorAll(".step")];
+  const rail  = [...form.querySelectorAll(".rail span")];
+  const block = form.closest(".register");
+  const thanks = block.querySelector(".thanks");
+  if (steps.length < 2) return;
+
+  form.classList.add("steps-ready");
+  let i = 0;
+
+  /* The four steps are different heights. Left alone the section lurches by
+     ~120px when the last question arrives; padded to the tallest it carries a
+     block of dead space on the short ones. So the stage takes the height of
+     whichever step is showing and animates between them. */
+  const stage = form.querySelector(".stage");
+  const fit = n => { stage.style.minHeight = Math.ceil(steps[n].getBoundingClientRect().height) + "px"; };
+  let rt;
+  addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => fit(i), 180); });
+
+  const show = (n, focus = true) => {
+    steps.forEach((s, k) => s.classList.toggle("on", k === n));
+    fit(n);
+    rail.forEach((s, k) => s.classList.toggle("on", k <= n));
+    steps[n].querySelector("[data-err]").textContent = "";
+    if (!focus) return;
+    /* preventScroll matters: without it the browser yanks the page to the field
+       and the section jumps under the reader mid-answer. */
+    const first = steps[n].querySelector("input:not([type=hidden]), .opt");
+    if (first) setTimeout(() => first.focus({ preventScroll: true }), 360);
+  };
+
+  const fail = (msg) => {
+    const e = steps[i].querySelector("[data-err]");
+    e.textContent = msg;
+    steps[i].querySelector("input:not([type=hidden]), .opt")?.focus({ preventScroll: true });
+  };
+
+  const valid = () => {
+    const s = steps[i];
+    const required = [...s.querySelectorAll("input[required]")];
+    for (const inp of required) {
+      if (!inp.value.trim()) return fail("This one we do need."), false;
+      if (inp.type === "email" && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(inp.value.trim()))
+        return fail("That address does not look right."), false;
+    }
+    const group = s.querySelector("[data-pick]");
+    if (group) {
+      const name = group.dataset.pick;
+      if (!s.querySelector(`input[name="${name}"]`).value)
+        return fail("Pick one to carry on."), false;
+    }
+    return true;
+  };
+
+  form.querySelectorAll("[data-pick]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const s = btn.closest(".step");
+      s.querySelectorAll("[data-pick]").forEach(o => o.setAttribute("aria-checked", "false"));
+      btn.setAttribute("aria-checked", "true");
+      s.querySelector(`input[name="${btn.dataset.pick}"]`).value = btn.dataset.value;
+      s.querySelector("[data-err]").textContent = "";
+    });
+  });
+
+  form.querySelectorAll("[data-next]").forEach(b =>
+    b.addEventListener("click", () => { if (valid()) show(++i); }));
+  form.querySelectorAll("[data-back]").forEach(b =>
+    b.addEventListener("click", () => show(--i)));
+
+  /* Enter should advance, not submit the half-filled form from step one. */
+  form.addEventListener("keydown", e => {
+    if (e.key !== "Enter" || e.target.tagName !== "INPUT") return;
     e.preventDefault();
-    alert("Demo only, no data is sent.");
-  }));
+    const next = steps[i].querySelector("[data-next]");
+    if (next) next.click(); else form.requestSubmit();
+  });
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!valid()) return;
+    const name = (form.querySelector('[name="first"]').value || "").trim();
+    const msg = thanks.querySelector("[data-thanks-msg]");
+    msg.textContent = name
+      ? name + ", the floor plans and the current price list are on their way."
+      : "The floor plans and the current price list are on their way.";
+    form.hidden = true;
+    thanks.hidden = false;
+    thanks.scrollIntoView({ block: "center", behavior: "smooth" });
+  });
+
+  thanks.querySelector("[data-restart]").addEventListener("click", () => {
+    form.reset();
+    form.querySelectorAll("[data-pick]").forEach(o => o.setAttribute("aria-checked", "false"));
+    i = 0; show(0, false);
+    thanks.hidden = true; form.hidden = false;
+    form.scrollIntoView({ block: "center", behavior: "smooth" });
+  });
+
+  show(0, false);
+});
 
 /* ============================================================
    LIGHTBOX — shared by the gallery and the floorplan modal.
