@@ -89,6 +89,24 @@ if (counters.length) {
   counters.forEach(el => cio.observe(el));
 }
 
+/* ---------- presentation centre: open now, or not ----------
+   data-hours is "open,close,closedDay,closedDay,..." on a 24h clock with Sunday
+   as 0. A live state is worth more than a line of opening times: it answers the
+   question the visitor actually has, which is whether they can go today. */
+document.querySelectorAll("[data-hours]").forEach(el => {
+  const parts = el.dataset.hours.split(",").map(Number);
+  const [open, close] = parts;
+  const shut = new Set(parts.slice(2));
+  const now = new Date();
+  const isOpen = !shut.has(now.getDay()) &&
+                 now.getHours() + now.getMinutes() / 60 >= open &&
+                 now.getHours() + now.getMinutes() / 60 < close;
+  const tag = document.createElement("span");
+  tag.className = "rf-now " + (isOpen ? "open" : "shut");
+  tag.innerHTML = "<i></i>" + (isOpen ? "Open now" : "Closed now");
+  el.appendChild(tag);
+});
+
 /* ============================================================
    REGISTER — one question per screen
    The markup ships as a plain stacked form. Only once this runs does it fold

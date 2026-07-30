@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=20260730b">
+<link rel="stylesheet" href="assets/site.css?v=20260730c">
 <style>
   .intro-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(28px,4vw,60px);align-items:end}
   @media(max-width:900px){.intro-grid{grid-template-columns:1fr;gap:24px}}
@@ -158,6 +158,12 @@
          form, so with JavaScript off the whole thing renders as an ordinary
          stacked form and still submits. .steps-ready is added by the script and
          is what collapses it down to one step at a time. -->
+    <!-- RK: the section dived straight into "Step 01" with nothing saying what it
+         was. A quiet header names it and puts a number on the commitment. -->
+    <div class="reg-head">
+      <span class="reg-eyebrow">Register</span>
+      <span class="reg-time">Four questions, about thirty seconds</span>
+    </div>
     <form class="steps" data-demo novalidate>
       <div class="rail" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
 
@@ -230,10 +236,26 @@
       <button class="back" type="button" data-restart>Register someone else</button>
     </div>
 
+    <!-- RK: this was three lines of run-together text. Each item now leads with
+         its own value, the address links out to a map and the phone and email
+         are tappable. The open/closed dot is worked out from the hours below. -->
     <div class="regfoot">
-      <div><b>Presentation Centre</b><br>Open daily 12&ndash;5pm (closed Thu &amp; Fri)</div>
-      <div><b>Where</b><br>Mitchel Street &amp; Gislason Avenue</div>
-      <div><b>Talk to us</b><br>555.010.2026 &middot; hello@culmena-demo.ca</div>
+      <div class="rf">
+        <span class="rf-lab">Presentation Centre</span>
+        <a class="rf-val" href="https://maps.google.com/?q=Mitchel+Street+%26+Gislason+Avenue"
+           target="_blank" rel="noopener">Mitchel Street &amp; Gislason Avenue
+           <span class="rf-go">Directions &rarr;</span></a>
+      </div>
+      <div class="rf">
+        <span class="rf-lab">Open</span>
+        <span class="rf-val" data-hours="12,17,0,1,2,5,6">Daily 12&ndash;5pm
+          <em class="rf-closed">Closed Thursday and Friday</em></span>
+      </div>
+      <div class="rf">
+        <span class="rf-lab">Talk to us</span>
+        <a class="rf-val" href="tel:5550102026">555.010.2026</a>
+        <a class="rf-mail" href="mailto:hello@culmena.ca">hello@culmena.ca</a>
+      </div>
     </div>
   </div>
 </div>
@@ -258,7 +280,7 @@
         <span>Mitchel Street &amp; Gislason Avenue</span>
         <span>Open daily 12&ndash;5pm, closed Thu &amp; Fri</span>
         <a href="tel:5550102026">555.010.2026</a>
-        <a href="mailto:hello@culmena-demo.ca">hello@culmena-demo.ca</a>
+        <a href="mailto:hello@culmena.ca">hello@culmena.ca</a>
       </div>
       <div>
         <h4>Register</h4>
@@ -295,6 +317,6 @@
 </footer>
 </div><!-- /.page -->
 
-<script src="assets/site.js?v=20260730b"></script>
+<script src="assets/site.js?v=20260730c"></script>
 </body>
 </html>
