@@ -32,6 +32,13 @@ html{scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);
   -webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{max-width:100%;display:block}
+/* The visible page background lives here, not on <body>: body now carries the
+   Safari toolbar tint. Must stay in normal flow, not fixed. A fixed overlay
+   the size of the viewport gets sampled instead of the body and the tint is
+   lost (measured on an iPhone: a 1px fixed strip is ignored, a full-screen
+   one is not). */
+.page{background:var(--cream);position:relative;z-index:0}
+
 a{color:inherit}
 .display{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.02em}
 .display i{font-style:italic;color:var(--terra)}

@@ -69,6 +69,12 @@
     .nb-03 .fig::after{background:linear-gradient(to top,rgba(8,20,20,.88) 0%,rgba(8,20,20,.3) 60%)}
     .facts{grid-template-columns:1fr}
   }
+
+  /* Safari 26 ignores theme-color and takes the toolbar colour from the
+     body background instead. The body therefore carries the colour of the
+     top of this page, measured off the top 26px at iPhone width, and .page
+     carries the colour the visitor actually sees. */
+  body{background-color:#95938A}
 </style>
 </head>
 <body>
@@ -102,6 +108,7 @@
   </div>
 </div>
 
+<div class="page">
 <header class="hero sub">
   <div class="media">
     <img src="assets/img/10-shops.png" alt="Neighbourhood high street near Culmena">
@@ -221,6 +228,7 @@
     </span>
   </div>
 </footer>
+</div><!-- /.page -->
 
 <script src="assets/site.js"></script>
 </body>

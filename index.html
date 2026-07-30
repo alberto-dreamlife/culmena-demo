@@ -16,6 +16,12 @@
   .intro-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(28px,4vw,60px);align-items:end}
   @media(max-width:900px){.intro-grid{grid-template-columns:1fr;gap:24px}}
   .fullbleed-break{height:clamp(340px,72vh,760px)}
+
+  /* Safari 26 ignores theme-color and takes the toolbar colour from the
+     body background instead. The body therefore carries the colour of the
+     top of this page, measured off the top 26px at iPhone width, and .page
+     carries the colour the visitor actually sees. */
+  body{background-color:#6C7982}
 </style>
 </head>
 <body>
@@ -50,6 +56,7 @@
 </div>
 
 <!-- HERO — video-ready: drop assets/video/hero-loop.mp4 in and it takes over -->
+<div class="page">
 <header class="hero">
   <div class="media">
     <img src="assets/img/01-hero.png" alt="Culmena townhomes at golden hour">
@@ -169,6 +176,7 @@
     </span>
   </div>
 </footer>
+</div><!-- /.page -->
 
 <script src="assets/site.js"></script>
 </body>

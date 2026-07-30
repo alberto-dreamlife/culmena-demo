@@ -160,6 +160,12 @@
     .tray-act .go{flex:1}
     body.tray-open{padding-bottom:0}
   }
+
+  /* Safari 26 ignores theme-color and takes the toolbar colour from the
+     body background instead. The body therefore carries the colour of the
+     top of this page, measured off the top 26px at iPhone width, and .page
+     carries the colour the visitor actually sees. */
+  body{background-color:#304C48}
 </style>
 </head>
 <body>
@@ -193,6 +199,7 @@
   </div>
 </div>
 
+<div class="page">
 <header class="page-head">
   <div class="glow"></div>
   <div class="wrap">
@@ -318,6 +325,7 @@
     </span>
   </div>
 </footer>
+</div><!-- /.page -->
 
 <script src="assets/units.js"></script>
 <script src="assets/site.js"></script>

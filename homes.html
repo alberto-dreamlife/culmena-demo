@@ -45,6 +45,12 @@
     .duo,.schemes,.amen{grid-template-columns:1fr}
     .duo .frame:last-child{margin-top:0;aspect-ratio:3/2}
   }
+
+  /* Safari 26 ignores theme-color and takes the toolbar colour from the
+     body background instead. The body therefore carries the colour of the
+     top of this page, measured off the top 26px at iPhone width, and .page
+     carries the colour the visitor actually sees. */
+  body{background-color:#5A82A7}
 </style>
 </head>
 <body>
@@ -78,6 +84,7 @@
   </div>
 </div>
 
+<div class="page">
 <header class="hero sub">
   <div class="media">
     <img src="assets/img/02-homes-exterior.png" alt="Culmena townhome exteriors">
@@ -220,6 +227,7 @@
     </span>
   </div>
 </footer>
+</div><!-- /.page -->
 
 <script src="assets/site.js"></script>
 </body>
