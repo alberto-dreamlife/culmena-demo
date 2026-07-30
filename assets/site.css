@@ -61,11 +61,10 @@ body{animation:pagein .7s ease both}
 /* body > nav, not nav: the footer has its own <nav> for the link columns and
    the unscoped rule was pinning it to the top of the viewport, where it sat
    invisible behind the real header. */
+/* viewport-fit:cover lets the page run under the notch, so the fixed header has
+   to add the inset back or it sits beneath the status bar. */
 body > nav{position:fixed;top:0;left:0;right:0;z-index:90;color:#fff;
-
-/* viewport-fit:cover lets the page run under the notch, so anything fixed to
-   the top has to add the inset back or it sits beneath the status bar. */
-body > nav{padding-top:env(safe-area-inset-top)}
+  padding-top:env(safe-area-inset-top);
   transition:background .4s ease,box-shadow .4s ease}
 nav .nav-in{max-width:var(--shell);margin-inline:auto;padding:22px var(--gutter);
   display:flex;align-items:center;justify-content:space-between;gap:24px;
@@ -426,11 +425,13 @@ footer a:hover{color:#fff}
 .credit .mk.tl{height:calc(var(--mark) * 1.619)}
 .f-demo{margin-left:auto}
 
+/* One line. The 92ch cap was resolving to about 590px and folding the
+   disclaimer in two while the copyright sat alone on the right. */
 .f-legal{margin-top:clamp(26px,3vw,38px);padding-top:22px;
   border-top:1px solid rgba(255,255,255,.1);
-  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
-  font-size:11.5px;line-height:1.65;color:#5E7C79}
-.f-legal p{max-width:92ch}
+  display:flex;justify-content:space-between;align-items:baseline;gap:14px 40px;
+  flex-wrap:wrap;font-size:11.5px;line-height:1.7;color:#5E7C79}
+.f-legal p{max-width:none;flex:1 1 auto}
 .f-copy{white-space:nowrap}
 
 @media(max-width:900px){
