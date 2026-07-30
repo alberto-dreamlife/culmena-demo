@@ -301,18 +301,20 @@ window.Lightbox = Lightbox;
   });
 })();
 
-/* Safari on iOS tints the status bar with theme-color, so it has to follow the
-   nav: dark while the nav floats over the hero, paper once the nav goes solid.
-   Left alone it stays dark and leaves a black band above a cream header. */
+/* Safari on iOS tints the status bar with theme-color. Each page ships its own
+   value in the head, measured off the top 26px of that page at iPhone width, so
+   the bar reads as an extension of the sky rather than a white shelf above it.
+   Once the nav goes solid the bar has to follow it to paper, or a sky-blue strip
+   sits above a cream header. */
 {
   const meta = document.querySelector('meta[name="theme-color"]');
   const navEl = document.querySelector("nav");
   if (meta && navEl) {
-    const DARK = "#1F4348", LIGHT = "#FAF7F1";
+    const TOP = meta.getAttribute("content"), LIGHT = "#FAF7F1";
     const sync = () => {
       const solid = navEl.classList.contains("solid") ||
                     document.body.classList.contains("menu-open");
-      meta.setAttribute("content", solid ? LIGHT : DARK);
+      meta.setAttribute("content", solid ? LIGHT : TOP);
     };
     new MutationObserver(sync).observe(navEl, { attributes: true, attributeFilter: ["class"] });
     new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
