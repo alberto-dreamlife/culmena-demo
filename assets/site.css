@@ -38,6 +38,12 @@ img{max-width:100%;display:block}
    lost (measured on an iPhone: a 1px fixed strip is ignored, a full-screen
    one is not). */
 .page{background:var(--cream);position:relative;z-index:0}
+/* Safari 26 takes the toolbar colour from a fixed layer the size of the
+   viewport, and only from one that size: measured on an iPhone, a 1px fixed
+   strip is ignored and the body is used instead, which then went white at
+   scroll 0. This layer sits behind the opaque .page, so it is never seen,
+   and it holds the colour steady wherever the page is scrolled. */
+.tint{position:fixed;inset:0;background-color:var(--tint);z-index:-1;pointer-events:none}
 
 a{color:inherit}
 .display{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.02em}
