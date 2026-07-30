@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F4348">
+<title>Register section: three options | Culmena</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1F4348; --forest-2:#2E5E63; --ink:#202A29; --cream:#FAF7F1;
+  --sand:#F1EBE0; --line:#E3DCCE; --terra:#E76F51; --amber:#D9A44A; --muted:#6E7370;
+  --shell:1600px; --gutter:clamp(20px,3.4vw,56px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);
+  font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+.display{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.02em}
+.display i{font-style:italic;color:var(--terra)}
+.wrap{width:100%;max-width:var(--shell);margin-inline:auto;padding-inline:var(--gutter)}
+
+/* ---------- chrome de la pagina de comparacion ---------- */
+.top{background:var(--ink);color:var(--cream);padding:clamp(26px,4vw,44px) 0}
+.top h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(26px,3.4vw,42px);line-height:1.1}
+.top p{color:#A7AFAC;margin-top:12px;max-width:70ch;font-size:15.5px}
+.jump{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.jump a{text-decoration:none;color:var(--cream);border:1px solid rgba(255,255,255,.28);
+  padding:11px 18px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  transition:background .3s,border-color .3s}
+.jump a:hover{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.label{background:var(--sand);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:26px 0}
+.label .n{font-size:11.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--terra)}
+.label h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(24px,3vw,36px);margin-top:8px}
+.label p{color:var(--muted);margin-top:10px;max-width:78ch;font-size:15.5px}
+.label .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.label .tags span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  border:1px solid var(--line);background:#fff;padding:7px 12px;color:var(--muted)}
+
+/* ---------- comunes de formulario ---------- */
+.fld{position:relative}
+.fld input,.fld select{width:100%;font-family:inherit;font-size:16px;color:inherit;
+  background:transparent;border:0;outline:0}
+.btn-amber{background:var(--amber);color:#1B1A17;border:0;font-family:inherit;font-size:13px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:19px 26px;cursor:pointer;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,background .3s;width:100%}
+.btn-amber:hover{background:#E4B461;transform:translateY(-2px);box-shadow:0 14px 30px rgba(217,164,74,.32)}
+.legal{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* ================= OPCION A — VENTANA AL PROYECTO ================= */
+.a{position:relative;background:var(--forest);color:var(--cream);overflow:hidden;
+  padding:clamp(70px,9vw,140px) 0}
+.a .bg{position:absolute;inset:0;z-index:0}
+.a .bg img{width:100%;height:112%;object-fit:cover;position:absolute;top:-6%;left:0;
+  transform:scale(1.04);will-change:transform}
+.a .bg::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(100deg,#12292C 0%,rgba(18,41,44,.94) 38%,rgba(18,41,44,.35) 68%,rgba(18,41,44,.1) 100%)}
+.a .in{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(30px,5vw,90px);align-items:center}
+.a h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(38px,5.4vw,80px);line-height:1.02}
+.a h2 i{font-style:italic;color:var(--amber)}
+.a .lede{margin-top:22px;color:#C7D2CE;max-width:44ch;font-size:16.5px}
+.a .meta{margin-top:34px;padding-top:24px;border-top:1px solid rgba(255,255,255,.16);
+  display:grid;grid-template-columns:repeat(3,auto);gap:26px;justify-content:start}
+.a .meta b{display:block;font-family:'Fraunces',serif;font-weight:400;font-size:30px;line-height:1}
+.a .meta small{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:#93A5A1;margin-top:7px}
+.card{background:var(--cream);color:var(--ink);padding:clamp(28px,3.4vw,46px);
+  box-shadow:0 40px 90px rgba(8,20,22,.44)}
+.card .eyebrow{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--terra)}
+.card h3{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(22px,2.2vw,30px);margin-top:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px}
+.grid2 .full{grid-column:1/-1}
+/* Campo con linea, no caja: se lee menos formulario y mas papel */
+.line-fld{border-bottom:1px solid var(--line);padding:14px 2px 12px;transition:border-color .3s}
+.line-fld:focus-within{border-color:var(--forest)}
+.line-fld label{display:block;font-size:10.5px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.a .btn-amber{margin-top:26px}
+.a .legal{margin-top:16px}
+@media(max-width:960px){.a .in{grid-template-columns:1fr}.a .meta{grid-template-columns:repeat(3,1fr)}}
+
+/* ================= OPCION B — PASO A PASO ================= */
+.b{background:var(--forest);color:var(--cream);padding:clamp(70px,9vw,140px) 0;position:relative;overflow:hidden}
+.b .glow{position:absolute;width:900px;height:900px;border-radius:50%;right:-280px;top:-320px;
+  background:radial-gradient(circle,rgba(217,164,74,.20),transparent 62%);pointer-events:none}
+.b .in{position:relative;z-index:2;max-width:940px;margin-inline:auto;text-align:center}
+.b .rail{display:flex;gap:10px;justify-content:center;margin-bottom:34px}
+.b .rail span{width:52px;height:3px;background:rgba(255,255,255,.2);transition:background .5s}
+.b .rail span.on{background:var(--amber)}
+.b .stepno{font-size:11.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#93A5A1}
+.b .q{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(32px,4.6vw,64px);line-height:1.06;
+  margin-top:14px}
+.b .q i{font-style:italic;color:var(--amber)}
+.b .hint{color:#A9B8B4;margin-top:14px;font-size:15.5px}
+.b .stage{position:relative;min-height:250px;margin-top:34px}
+.b .step{position:absolute;inset:0;opacity:0;transform:translateY(22px);pointer-events:none;
+  transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+.b .step.on{opacity:1;transform:none;pointer-events:auto;position:relative}
+.b .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:660px;margin:0 auto}
+.b .big-input{flex:1;min-width:240px;background:transparent;border:0;border-bottom:2px solid rgba(255,255,255,.3);
+  color:var(--cream);font-family:'Fraunces',serif;font-size:clamp(22px,2.6vw,34px);
+  padding:12px 4px;text-align:center;outline:0;transition:border-color .35s}
+.b .big-input::placeholder{color:rgba(255,255,255,.32)}
+.b .big-input:focus{border-color:var(--amber)}
+.b .opts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.b .opt{background:transparent;color:var(--cream);border:1px solid rgba(255,255,255,.3);
+  font-family:inherit;font-size:14px;font-weight:600;padding:16px 26px;cursor:pointer;
+  transition:background .3s,border-color .3s,color .3s,transform .3s}
+.b .opt:hover{transform:translateY(-3px);border-color:var(--amber)}
+.b .opt.on{background:var(--amber);border-color:var(--amber);color:#1B1A17}
+.b .next{margin-top:30px;display:inline-flex;align-items:center;gap:12px;background:var(--amber);
+  color:#1B1A17;border:0;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;padding:18px 34px;cursor:pointer;transition:transform .35s,box-shadow .35s}
+.b .next:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(217,164,74,.3)}
+.b .done{display:none;text-align:center}
+.b .done.on{display:block;animation:pop .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.b .tick{width:66px;height:66px;border-radius:50%;border:2px solid var(--amber);color:var(--amber);
+  display:grid;place-items:center;font-size:30px;margin:0 auto 22px}
+.b .legal{color:#8FA09C;margin-top:26px}
+
+/* ================= OPCION C — LO QUE DESBLOQUEAS ================= */
+.c{background:var(--sand);padding:clamp(70px,9vw,140px) 0}
+.c .in{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(34px,5vw,86px);align-items:center}
+.c .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--terra)}
+.c h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(34px,4.6vw,62px);line-height:1.04;margin-top:12px}
+.c h2 i{font-style:italic;color:var(--terra)}
+.c .lede{color:var(--muted);margin-top:18px;max-width:46ch}
+/* Las tres cartas se abren en abanico al entrar en pantalla */
+/* The third card is rotated 12deg, so it hangs lower than its own box: the
+   height has to clear the rotated corner or it sits on the availability bar. */
+.fan{position:relative;height:392px;margin-top:40px}
+.fan .doc{position:absolute;left:0;top:0;width:210px;background:#fff;border:1px solid var(--line);
+  box-shadow:0 22px 48px rgba(31,67,72,.16);padding:20px;transform-origin:bottom left;
+  transform:rotate(0deg) translateY(0);opacity:0;
+  transition:transform .85s cubic-bezier(.2,.75,.2,1),opacity .6s ease}
+.fan.in .doc{opacity:1}
+.fan.in .doc:nth-child(1){transform:rotate(-8deg) translate(6px,10px)}
+.fan.in .doc:nth-child(2){transform:rotate(3deg) translate(210px,-4px)}
+.fan.in .doc:nth-child(3){transform:rotate(12deg) translate(412px,16px)}
+.fan .doc:nth-child(2){transition-delay:.12s}
+.fan .doc:nth-child(3){transition-delay:.24s}
+.fan .doc .ic{width:36px;height:36px;border:1px solid var(--line);display:grid;place-items:center;
+  color:var(--forest);font-size:16px}
+.fan .doc b{display:block;font-family:'Fraunces',serif;font-weight:400;font-size:19px;margin-top:16px}
+.fan .doc small{display:block;color:var(--muted);font-size:13px;margin-top:6px;line-height:1.5}
+.fan .doc .tag{margin-top:16px;font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--terra)}
+.avail{margin-top:34px;background:var(--forest);color:var(--cream);padding:22px clamp(20px,2.4vw,30px);
+  display:flex;gap:clamp(18px,3vw,44px);flex-wrap:wrap;align-items:center}
+.avail div b{display:block;font-family:'Fraunces',serif;font-weight:400;font-size:28px;line-height:1}
+.avail div small{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:#93A5A1;margin-top:6px}
+.avail .bar{flex:1;min-width:150px}
+.avail .track{height:6px;background:rgba(255,255,255,.18);overflow:hidden}
+.avail .fill{height:100%;width:0;background:var(--amber);transition:width 1.6s cubic-bezier(.2,.7,.2,1)}
+.c .formcard{background:#fff;border:1px solid var(--line);padding:clamp(28px,3.4vw,44px);
+  box-shadow:0 30px 70px rgba(31,67,72,.10)}
+.c .formcard h3{font-family:'Fraunces',serif;font-weight:400;font-size:26px}
+.c .formcard .sub{color:var(--muted);font-size:14.5px;margin-top:8px}
+@media(max-width:1040px){.c .in{grid-template-columns:1fr}
+  .fan{height:260px}
+  .fan.in .doc:nth-child(1){transform:rotate(-6deg) translate(2px,6px)}
+  .fan.in .doc:nth-child(2){transform:rotate(2deg) translate(30%,0)}
+  .fan.in .doc:nth-child(3){transform:rotate(9deg) translate(62%,10px)}}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.fan .doc{width:170px}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <h1>Register section, three directions</h1>
+    <p>All three are live, not pictures. Type in them, click them. Same content and same palette in
+       all three, so the only thing changing is the idea. Pick one and I will build it properly into
+       both sites.</p>
+    <div class="jump">
+      <a href="#a">A · A window on the project</a>
+      <a href="#b">B · One question at a time</a>
+      <a href="#c">C · What it unlocks</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ A ============ -->
+<div class="label" id="a">
+  <div class="wrap">
+    <div class="n">Option A</div>
+    <h2>A window on the project</h2>
+    <p>The flat block of colour becomes a photograph of the project, and the form sits on it as a
+       piece of paper. Closest to what a buyer expects from a premium developer, and the easiest to
+       reuse on every project because it only needs one good image.</p>
+    <div class="tags"><span>Graphics-led</span><span>Slow parallax</span><span>Lowest risk</span></div>
+  </div>
+</div>
+<section class="a">
+  <div class="bg"><img src="../assets/img/03-courtyard.png" alt="" aria-hidden="true"></div>
+  <div class="wrap in">
+    <div>
+      <h2 class="display">Be first to <i>call it home.</i></h2>
+      <p class="lede">Priority access to floor plans, pricing and preview events, before any of it
+         reaches the public listings.</p>
+      <div class="meta">
+        <div><b>107</b><small>Homes</small></div>
+        <div><b>27</b><small>Plans</small></div>
+        <div><b>2&ndash;4</b><small>Bedrooms</small></div>
+      </div>
+    </div>
+    <form class="card" data-demo>
+      <div class="eyebrow">Priority list</div>
+      <h3 class="display">Register in thirty seconds.</h3>
+      <div class="grid2">
+        <div class="line-fld"><label>First name</label><input placeholder="Alberto" required></div>
+        <div class="line-fld"><label>Last name</label><input placeholder="Sanchez" required></div>
+        <div class="line-fld full"><label>Email</label><input type="email" placeholder="you@email.com" required></div>
+        <div class="line-fld full"><label>Phone (optional)</label><input type="tel" placeholder="604 555 0123"></div>
+      </div>
+      <button class="btn-amber" type="submit">Register now</button>
+      <p class="legal">Free, no obligation, unsubscribe any time.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ B ============ -->
+<div class="label" id="b">
+  <div class="wrap">
+    <div class="n">Option B</div>
+    <h2>One question at a time</h2>
+    <p>Not a form, a short conversation. Three questions, one screen each, with a progress rail.
+       Nobody in the multiplex category does this, and it is the one that also earns its keep:
+       fewer fields on screen is the single most reliable way to raise completions.</p>
+    <div class="tags"><span>Interaction-led</span><span>Qualifies the lead</span><span>Most distinctive</span></div>
+  </div>
+</div>
+<section class="b">
+  <div class="glow"></div>
+  <div class="wrap in">
+    <div id="bForm">
+      <div class="rail"><span class="on"></span><span></span><span></span></div>
+      <div class="stage">
+
+        <div class="step on" data-step="1">
+          <div class="stepno">Step 01 of 03</div>
+          <div class="q display">What should we <i>call you?</i></div>
+          <p class="hint">So the floor plans arrive with your name on them, not "Dear buyer".</p>
+          <div class="row" style="margin-top:26px">
+            <input class="big-input" placeholder="First name" id="bName">
+          </div>
+          <button class="next" type="button" data-next>Continue &rarr;</button>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="stepno">Step 02 of 03</div>
+          <div class="q display">How many <i>bedrooms?</i></div>
+          <p class="hint">We will only send you the plans that fit.</p>
+          <div class="opts" style="margin-top:26px">
+            <button class="opt" type="button" data-pick>Two</button>
+            <button class="opt" type="button" data-pick>Three</button>
+            <button class="opt" type="button" data-pick>Four</button>
+            <button class="opt" type="button" data-pick>Still deciding</button>
+          </div>
+          <button class="next" type="button" data-next>Continue &rarr;</button>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="stepno">Step 03 of 03</div>
+          <div class="q display">Where do we <i>send them?</i></div>
+          <p class="hint">One email with the plans, then only when something real changes.</p>
+          <div class="row" style="margin-top:26px">
+            <input class="big-input" type="email" placeholder="you@email.com" id="bMail">
+          </div>
+          <button class="next" type="button" data-next>Send me the plans &rarr;</button>
+          <p class="legal">Free, no obligation, unsubscribe any time.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="done" id="bDone">
+      <div class="tick">&#10003;</div>
+      <div class="q display">You are on the <i>list.</i></div>
+      <p class="hint" id="bMsg">The plans are on their way.</p>
+      <button class="next" type="button" id="bReset">Run it again</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ C ============ -->
+<div class="label" id="c">
+  <div class="wrap">
+    <div class="n">Option C</div>
+    <h2>What it unlocks</h2>
+    <p>Stops asking and starts offering. The three things you actually get fan out as documents,
+       and a live availability bar gives the reason to do it today rather than later. The form
+       shrinks to four fields because it is no longer the main event.</p>
+    <div class="tags"><span>Content-led</span><span>Shows the value</span><span>Creates urgency</span></div>
+  </div>
+</div>
+<section class="c">
+  <div class="wrap in">
+    <div>
+      <div class="eyebrow">What you get</div>
+      <h2 class="display">Three things, <i>the same day.</i></h2>
+      <p class="lede">Registering is not joining a mailing list. It is opening the drawer the public
+         site does not show.</p>
+
+      <div class="fan" id="fan">
+        <div class="doc">
+          <div class="ic">&#9633;</div>
+          <b>27 floor plans</b>
+          <small>Every plan in the collection, as a print-ready PDF.</small>
+          <div class="tag">PDF &middot; 4.2 MB</div>
+        </div>
+        <div class="doc">
+          <div class="ic">&#9679;</div>
+          <b>The price list</b>
+          <small>Current release, by home, before it reaches the listings.</small>
+          <div class="tag">Updated weekly</div>
+        </div>
+        <div class="doc">
+          <div class="ic">&#9650;</div>
+          <b>Preview invitation</b>
+          <small>The presentation centre, before the public opening.</small>
+          <div class="tag">By appointment</div>
+        </div>
+      </div>
+
+      <div class="avail">
+        <div><b id="cSold">0</b><small>Released</small></div>
+        <div><b>107</b><small>In the collection</small></div>
+        <div class="bar">
+          <div class="track"><div class="fill" id="cFill"></div></div>
+          <small style="display:block;margin-top:10px;font-size:10.5px;letter-spacing:.16em;
+                 text-transform:uppercase;color:#93A5A1">Next release in March</small>
+        </div>
+      </div>
+    </div>
+
+    <form class="formcard" data-demo>
+      <h3 class="display">Open the drawer.</h3>
+      <p class="sub">Four fields. Nothing else is required.</p>
+      <div class="grid2">
+        <div class="line-fld"><label>First name</label><input placeholder="Alberto" required></div>
+        <div class="line-fld"><label>Last name</label><input placeholder="Sanchez" required></div>
+        <div class="line-fld full"><label>Email</label><input type="email" placeholder="you@email.com" required></div>
+        <div class="line-fld full"><label>Working with a realtor?</label>
+          <select style="border:0;background:transparent;font-family:inherit;font-size:16px;width:100%;outline:0">
+            <option>Not represented</option><option>Yes, represented</option><option>I am a realtor</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-amber" type="submit" style="margin-top:26px">Send me all three</button>
+      <p class="legal" style="margin-top:16px">Free, no obligation, unsubscribe any time.</p>
+    </form>
+  </div>
+</section>
+
+<script>
+/* demo: ningun formulario envia nada */
+document.querySelectorAll('form[data-demo]').forEach(f =>
+  f.addEventListener('submit', e => { e.preventDefault(); alert('Demo only, no data is sent.'); }));
+
+/* ---- A: parallax lento sobre la foto ---- */
+const aBg = document.querySelector('.a .bg img');
+if (aBg) {
+  const sec = document.querySelector('.a');
+  addEventListener('scroll', () => {
+    const r = sec.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const p = (innerHeight - r.top) / (innerHeight + r.height);
+    aBg.style.transform = `scale(1.06) translateY(${(p - .5) * 46}px)`;
+  }, { passive: true });
+}
+
+/* ---- B: el paso a paso ---- */
+{
+  const steps = [...document.querySelectorAll('.b .step')];
+  const rail  = [...document.querySelectorAll('.b .rail span')];
+  const form  = document.getElementById('bForm');
+  const done  = document.getElementById('bDone');
+  let i = 0;
+  const show = n => {
+    steps.forEach((s, k) => s.classList.toggle('on', k === n));
+    rail.forEach((s, k) => s.classList.toggle('on', k <= n));
+    const inp = steps[n].querySelector('input');
+    if (inp) setTimeout(() => inp.focus({ preventScroll: true }), 380);
+  };
+  document.querySelectorAll('.b [data-pick]').forEach(b =>
+    b.addEventListener('click', () => {
+      b.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('on'));
+      b.classList.add('on');
+    }));
+  document.querySelectorAll('.b [data-next]').forEach(b =>
+    b.addEventListener('click', () => {
+      if (i < steps.length - 1) { i++; show(i); return; }
+      const name = (document.getElementById('bName').value || '').trim();
+      document.getElementById('bMsg').textContent = name
+        ? `${name}, the plans are on their way.` : 'The plans are on their way.';
+      form.style.display = 'none'; done.classList.add('on');
+    }));
+  /* Enter avanza, que es la mitad de la gracia de un formulario asi */
+  document.querySelectorAll('.b .big-input').forEach(inp =>
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); inp.closest('.step').querySelector('[data-next]').click(); }
+    }));
+  document.getElementById('bReset').addEventListener('click', () => {
+    i = 0; show(0); done.classList.remove('on'); form.style.display = '';
+    document.querySelectorAll('.b .big-input').forEach(x => x.value = '');
+    document.querySelectorAll('.b .opt').forEach(o => o.classList.remove('on'));
+  });
+}
+
+/* ---- C: abanico y contador al entrar en pantalla ---- */
+{
+  const fan = document.getElementById('fan');
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    fan.classList.add('in');
+    document.getElementById('cFill').style.width = '21.5%';
+    const el = document.getElementById('cSold'), target = 23, t0 = performance.now();
+    const tick = now => {
+      const p = Math.min((now - t0) / 1400, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    io.disconnect();
+  }), { threshold: .3 });
+  io.observe(fan);
+}
+</script>
+</body>
+</html>
