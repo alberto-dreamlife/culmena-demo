@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=20260730a">
+<link rel="stylesheet" href="assets/site.css?v=20260730b">
 <style>
   .duo{display:grid;grid-template-columns:1.35fr 1fr;gap:var(--gap);margin-top:clamp(44px,5vw,70px)}
   .duo .frame{aspect-ratio:3/2}
@@ -289,18 +289,62 @@
 </div>
 
 <footer>
-  <div class="wrap f-in">
-    <span><b>CULMENA</b> · Renders by <b>Dreamlife</b> · 2D floorplans by <b>Twinlines</b>. E.&amp;O.E.</span>
-    <span class="fl">
-      <a href="homes.html">Homes</a>
-      <a href="floorplans.html">Floor Plans</a>
-      <a href="neighbourhood.html">Neighbourhood</a>
-      <a href="gallery.html">Gallery</a>
+  <div class="wrap f-top">
+    <div class="f-brand">
+      <div class="f-mark display">CULMENA</div>
+      <p>A collection of 107 multiplex townhomes at Mitchel Street and Rosenburg Way.
+         Two, three and four bedroom homes wrapped around courtyards and tree-lined lanes.</p>
+    </div>
+    <nav class="f-cols" aria-label="Footer">
+      <div>
+        <h4>Explore</h4>
+        <a href="homes.html">Homes</a>
+        <a href="floorplans.html">Floor Plans</a>
+        <a href="neighbourhood.html">Neighbourhood</a>
+        <a href="gallery.html">Gallery</a>
+      </div>
+      <div>
+        <h4>Presentation Centre</h4>
+        <span>Mitchel Street &amp; Gislason Avenue</span>
+        <span>Open daily 12&ndash;5pm, closed Thu &amp; Fri</span>
+        <a href="tel:5550102026">555.010.2026</a>
+        <a href="mailto:hello@culmena-demo.ca">hello@culmena-demo.ca</a>
+      </div>
+      <div>
+        <h4>Register</h4>
+        <span>Priority access to plans and pricing.</span>
+        <a class="f-cta" href="#register">Join the list &rarr;</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Credits. The two marks are sized by their wordmark height, not by their box:
+       Twinlines carries STUDIO underneath, so matching box heights would leave its
+       name visibly smaller than Dreamlife's. Measured off the artwork, its box runs
+       1.619x its wordmark. -->
+  <div class="wrap f-credits">
+    <span class="credit">
+      <small>Renderings by</small>
+      <a href="https://dreamlife.org" target="_blank" rel="noopener">
+        <img class="mk dl" src="assets/logos/dreamlife-white.svg" alt="Dreamlife" width="387" height="87">
+      </a>
     </span>
+    <span class="credit">
+      <small>2D floor plans by</small>
+      <img class="mk tl" src="assets/logos/twinlines-white.png" alt="TwinLines Studio" width="820" height="225">
+    </span>
+    <span class="credit f-demo"><small>A demonstration project</small></span>
+  </div>
+
+  <div class="wrap f-legal">
+    <p>Renderings, floor plans and areas are artistic representations, approximate and subject to
+       change. This is not an offering for sale. Any such offering may only be made with a
+       disclosure statement. E.&amp;O.E.</p>
+    <p class="f-copy">&copy; 2026 Culmena</p>
   </div>
 </footer>
 </div><!-- /.page -->
 
-<script src="assets/site.js?v=20260730a"></script>
+<script src="assets/site.js?v=20260730b"></script>
 </body>
 </html>
