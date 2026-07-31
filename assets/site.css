@@ -237,6 +237,12 @@ h2.title{font-size:clamp(32px,4.4vw,66px);line-height:1.05;max-width:15ch}
 /* full-bleed image blocks */
 .bleed{position:relative;overflow:hidden}
 .bleed img{width:100%;height:100%;object-fit:cover}
+/* A video inside a full-bleed block sits over its own still. No z-index: the
+   caption and any scrim are later in the source and must stay on top. */
+.bleed .fig-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity 1.1s ease}
+.bleed .fig-vid.playing{opacity:1}
+.bleed .fig-vid.fading{opacity:0 !important}
 .frame{overflow:hidden;border-radius:20px;position:relative}
 .frame > img{width:100%;height:100%;object-fit:cover}
 .frame img{transition:transform 1.1s cubic-bezier(.2,.7,.2,1);will-change:transform}

@@ -74,6 +74,24 @@ document.querySelectorAll("video[data-loop]").forEach(v => {
   })();
 });
 
+/* ---------- in-page video ----------
+   A 47 MB master below the fold should not be fetched with the page, so the
+   file lives in data-src and is only attached when the block is one screen
+   away. From there it goes through the same loop handling as the headers. */
+{
+  const vids = document.querySelectorAll("video.fig-vid[data-src]");
+  if (vids.length && "IntersectionObserver" in window) {
+    const vio = new IntersectionObserver((es, o) => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const v = e.target; o.unobserve(v);
+      v.src = v.dataset.src;
+      v.load();
+      v.play().catch(() => {});
+    }), { rootMargin: "100% 0px" });
+    vids.forEach(v => vio.observe(v));
+  }
+}
+
 /* ---------- reveal on scroll ---------- */
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => {
