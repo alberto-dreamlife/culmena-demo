@@ -157,6 +157,7 @@ body.menu-open nav{background:transparent;box-shadow:none;color:#fff}
 .hero .media img{animation:heroZoom 2.4s cubic-bezier(.2,.6,.2,1) both}
 .hero .media video{opacity:0;transition:opacity 1.1s ease}
 .hero .media video.playing{opacity:1}
+video.fading{opacity:0 !important;transition:opacity .7s ease}
 @keyframes heroZoom{from{transform:scale(1.1)}to{transform:scale(1.02)}}
 
 /* The still under a video hero has to be that video's own first frame, or the
@@ -250,6 +251,7 @@ h2.title{font-size:clamp(32px,4.4vw,66px);line-height:1.05;max-width:15ch}
 .statement .media img,.statement .media video{width:100%;height:100%;object-fit:cover;opacity:.40}
 .statement .media video{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease}
 .statement .media video.playing{opacity:.40}
+.statement .media video.fading{opacity:0 !important}
 /* scrim — keeps the type legible whatever lands behind it */
 .statement::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse at center,rgba(14,36,38,.52) 0%,rgba(14,36,38,.30) 60%,rgba(14,36,38,.55) 100%)}

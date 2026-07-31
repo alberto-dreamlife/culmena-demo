@@ -31,14 +31,47 @@ if (burger && drawer) {
 
 /* ---------- video headers ----------
    Fade the loop in only once it actually starts playing, so a missing or
-   slow-loading file degrades silently to the poster still underneath. */
+   slow-loading file degrades silently to the poster still underneath.
+
+   Clips whose last frame does not match their first cannot use the loop
+   attribute: the wrap-around is a visible cut. Measured here, the entry clip
+   on Homes jumps across 88 percent of the picture. So instead the clip fades
+   out over its tail, restarts, and fades back in. The still underneath is that
+   video's own first frame, so the fade lands exactly where the restart begins.
+   The hero loop on the home page does close (1.2 percent) and keeps the plain
+   loop attribute; data-replay="0" opts it out.
+   ============================================================ */
 document.querySelectorAll("video[data-loop]").forEach(v => {
   const show = () => v.classList.add("playing");
   v.addEventListener("playing", show, { once: true });
-  if (v.readyState >= 3) show();
+  v.addEventListener("loadeddata", show, { once: true });
+  if (v.readyState >= 2) show();
   /* iOS occasionally refuses the initial autoplay; nudge it once */
-  const kick = () => { v.play().catch(() => {}); document.removeEventListener("touchstart", kick); };
+  const kick = () => { v.play().catch(() => {}); };
   document.addEventListener("touchstart", kick, { once: true, passive: true });
+
+  const tail = v.dataset.replay === undefined ? 0.7 : parseFloat(v.dataset.replay);
+  if (!(tail > 0)) return;
+
+  let armed = false;
+  const restart = () => {
+    v.currentTime = 0;
+    v.play().catch(() => {});
+    /* Two frames, not one: clearing the class in the same tick as the seek lets
+       the browser fold both into a single paint and the fade never renders. */
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      v.classList.remove("fading"); armed = false;
+    }));
+  };
+  v.addEventListener("ended", restart);
+  (function tick() {
+    const end = v.duration;
+    if (end && !v.paused) {
+      if (!armed && end - v.currentTime <= tail) { armed = true; v.classList.add("fading"); }
+      if (v.currentTime >= end && armed) restart();
+    }
+    requestAnimationFrame(tick);
+  })();
 });
 
 /* ---------- reveal on scroll ---------- */
