@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=20260731m">
+<link rel="stylesheet" href="assets/site.css?v=20260818a">
 <style>
   .intro-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(28px,4vw,60px);align-items:end}
   @media(max-width:900px){.intro-grid{grid-template-columns:1fr;gap:24px}}
@@ -105,9 +105,11 @@
        a blocked autoplay degrades to exactly what the video would have shown.
        47 MB below the fold is not fetched with the page: the file sits in
        data-src and is attached when the block is one screen away. -->
-  <img src="assets/img/03-courtyard-poster.webp" alt="Landscaped courtyard between townhomes" loading="lazy">
-  <video class="fig-vid" data-loop muted playsinline preload="none" aria-hidden="true" tabindex="-1"
-         data-src="assets/video/courtyard-loop.mp4"></video>
+  <div class="bleed-media" data-depth="30">
+    <img src="assets/img/03-courtyard-poster.webp" alt="Landscaped courtyard between townhomes" loading="lazy">
+    <video class="fig-vid" data-loop muted playsinline preload="none" aria-hidden="true" tabindex="-1"
+           data-src="assets/video/courtyard-loop.mp4"></video>
+  </div>
   <span class="cap">Courtyard living</span>
 </div>
 
@@ -323,6 +325,7 @@
 </footer>
 </div><!-- /.page -->
 
-<script src="assets/site.js?v=20260731m"></script>
+<script src="assets/site.js?v=20260818a"></script>
+<script src="assets/chat.js?v=20260818a" defer></script>
 </body>
 </html>

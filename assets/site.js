@@ -92,6 +92,35 @@ document.querySelectorAll("video[data-loop]").forEach(v => {
   }
 }
 
+/* ---------- depth on scroll ----------
+   Anything with data-depth drifts against the page as it passes the viewport,
+   which is what stops a long column of stills from reading as flat. Every layer
+   is oversized in CSS by more than the drift, so nothing can expose an edge, and
+   it is skipped entirely for anyone who asks for reduced motion. */
+{
+  const layers = [...document.querySelectorAll("[data-depth]")];
+  if (layers.length && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let queued = false;
+    const paint = () => {
+      queued = false;
+      const vh = innerHeight;
+      for (const el of layers) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -240 || r.top > vh + 240) continue;
+        const k = (r.top + r.height / 2 - vh / 2) / vh;       /* roughly -1 to 1 */
+        const d = parseFloat(el.dataset.depth) || 30;
+        el.style.transform = `translate3d(0, ${(k * d).toFixed(1)}px, 0)`;
+      }
+    };
+    addEventListener("scroll", () => {
+      if (queued) return;
+      queued = true; requestAnimationFrame(paint);
+    }, { passive: true });
+    addEventListener("resize", paint, { passive: true });
+    paint();
+  }
+}
+
 /* ---------- reveal on scroll ---------- */
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => {
