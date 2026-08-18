@@ -12,6 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css?v=20260818a">
+<!-- The map frame is lazy so it does not compete with the header, but warming
+     it during idle time means it is drawn by the time anyone scrolls to it. -->
+<link rel="prefetch" href="assets/map.html" as="document">
+<link rel="prefetch" href="assets/map-data.json" as="fetch" crossorigin>
 <style>
   /* ---- varied editorial grid (RK: break the left-image/right-text loop) ---- */
   .nb{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap);
@@ -180,6 +184,27 @@
       <div class="fact reveal d1"><b>8</b><span>Minutes on foot to the high street</span></div>
       <div class="fact reveal d2"><b>3</b><span>Schools within a 10-minute walk</span></div>
       <div class="fact reveal d3"><b>12</b><span>Kilometres of connected forest trail</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ INTERACTIVE MAP ============
+     The map ships as a self-contained page, so it goes in an iframe rather than
+     being unpicked into this document: it sets its own body styles and its own
+     error handling, and inlining it would mean fighting both on every page that
+     ever carries it. It is already drawn in this project's palette, so unlike
+     the Victoria Haus one the parent has nothing to restyle. -->
+<section id="map" style="background:var(--sand)">
+  <div class="wrap">
+    <div class="kicker reveal">On the map</div>
+    <h2 class="title display reveal d1">Everything within <i>a few streets.</i></h2>
+    <p class="lead reveal d2">The shops on Gislason, the exchange on Rosenburg, three schools and
+       twelve kilometres of trail. Filter by what matters to you, then click any entry to fly to it.</p>
+    <div class="mapframe reveal d1">
+      <iframe id="cmMap" title="Culmena neighbourhood map" loading="lazy"
+              src="assets/map.html?v=20260818a" scrolling="no"></iframe>
+      <div class="map-wait" id="mapWait">Drawing the neighbourhood</div>
     </div>
   </div>
 </section>
@@ -365,6 +390,24 @@
 </footer>
 </div><!-- /.page -->
 
+<script>
+/* The map measures itself and posts its height up, rather than this page
+   guessing one. The legend reflows from five columns to one, so the right
+   height at 1440 is the wrong height at 390 and any fixed value is wrong twice.
+   Same origin, but the check on e.source is what stops any other frame on the
+   page from resizing this one. */
+(function () {
+  const frame = document.getElementById("cmMap");
+  const wait  = document.getElementById("mapWait");
+  if (!frame) return;
+  addEventListener("message", function (e) {
+    if (e.source !== frame.contentWindow) return;
+    if (!e.data || e.data.culmenaMap !== "height") return;
+    frame.style.height = e.data.height + "px";
+    if (wait) wait.style.opacity = 0;
+  });
+})();
+</script>
 <script src="assets/site.js?v=20260818a"></script>
 <script src="assets/chat.js?v=20260818a" defer></script>
 </body>

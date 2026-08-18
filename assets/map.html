@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Culmena — The Neighbourhood</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* The map is built in Culmena's own palette rather than a neutral one that
+     the parent page then overrides. The Victoria Haus map needed the page to
+     reach into the iframe and repaint it on every load, which cost a frame and
+     broke whenever the map's internals moved. This one arrives correct. */
+  :root{
+    --forest:#1F4348; --forest-2:#2E5E63; --terra:#E76F51; --amber:#D9A44A;
+    --cream:#FAF7F1; --sand:#F1EBE0; --line:#E3DCCE; --muted:#6E7370;
+    --display:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
+    /* map surface */
+    --paper:#F6F1E6; --road:#FFFFFF; --road-c:#E6DDCB;
+    --green:#D3E0C1; --green-2:#C2D5AE; --forest-fill:#BFD3AC;
+    --water:#BCD5DE; --water-e:#9DBDC9; --school:#EEE2C8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:transparent;font-family:var(--sans);color:var(--forest)}
+  .card{background:#fff;border-radius:18px;padding:clamp(18px,2.2vw,30px)}
+
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+  .stats{display:flex;gap:clamp(18px,3vw,42px);flex-wrap:wrap;margin:18px 0 16px;
+    font-size:13px;color:var(--muted)}
+  .stats b{font-family:var(--display);font-weight:500;font-size:clamp(22px,2.4vw,30px);
+    color:var(--forest);display:block;line-height:1.05}
+  #chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{border:1px solid var(--line);background:transparent;color:var(--muted);
+    font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.08em;
+    text-transform:uppercase;padding:9px 16px;border-radius:999px;cursor:pointer;
+    transition:background .18s,color .18s,border-color .18s}
+  .chip:hover{border-color:var(--forest)}
+  .chip.on{background:var(--forest);border-color:var(--forest);color:#fff}
+  .chip .sw{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;
+    vertical-align:1px}
+
+  /* pan-y, not none: a vertical drag has to keep scrolling the page. Taking
+     the whole gesture makes the map a trap you cannot scroll past on a phone. */
+  #stage{position:relative;border-radius:18px;overflow:hidden;background:var(--paper);
+    border:1px solid var(--line);aspect-ratio:1400/960;touch-action:pan-y}
+  #stage svg{display:block;width:100%;height:100%;cursor:grab}
+  #stage svg.drag{cursor:grabbing}
+  .zoom{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;z-index:4}
+  .zbtn{width:36px;height:36px;border:1px solid var(--line);background:#fff;color:var(--forest);
+    font-size:18px;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .zbtn:first-child{border-radius:12px 12px 0 0;border-bottom:none}
+  .zbtn:last-child{border-radius:0 0 12px 12px}
+  .zbtn:hover{background:var(--sand)}
+  /* Only the instruction sits on the plan. The disclaimer moved out from under
+     it: inside the frame it wrapped over four lines on a phone and crossed the
+     zoom buttons, and it belongs to the page anyway, not to the drawing. */
+  .attr{position:absolute;left:14px;bottom:12px;font-size:10px;color:#A9A296;z-index:4;
+    background:rgba(246,241,230,.82);padding:3px 8px;border-radius:999px}
+  .note{margin:12px 2px 0;font-size:11.5px;line-height:1.5;color:#A9A296}
+  #tip{position:fixed;z-index:50;pointer-events:none;background:var(--forest);color:#fff;
+    font-size:12.5px;padding:7px 11px;border-radius:8px;opacity:0;transition:opacity .12s;
+    box-shadow:0 6px 18px rgba(31,67,72,.28)}
+
+  #index{display:grid;grid-template-columns:repeat(5,1fr);gap:26px;margin-top:26px}
+  .cat-h{font-family:var(--display);font-size:15px;font-weight:500;margin:0 0 8px;
+    display:flex;align-items:center;gap:9px}
+  .cat-h .sw{width:9px;height:9px;border-radius:50%;flex:none}
+  .lg-item{display:flex;gap:9px;align-items:baseline;padding:5px 8px;border-radius:8px;
+    cursor:pointer;font-size:13px;line-height:1.4;transition:background .15s}
+  .lg-item .n{font-weight:700;font-size:11px;min-width:15px;text-align:right}
+  .lg-item .w{color:#A19A8E}
+  .lg-item:hover,.lg-item.hl{background:var(--sand)}
+  .col.off{opacity:.28}
+
+  .mk{cursor:pointer}
+  .mk circle{transition:r .15s,stroke-width .15s}
+  .mk.hl circle{r:19;stroke-width:3.5}
+  /* Every label is painted with a halo of the paper colour underneath it. A
+     plan this dense will always have a street name crossing a marker or a park
+     name crossing a road, and the halo is what keeps both readable instead of
+     forcing the labels to be dropped. */
+  .street-lb,.green-lb,.water-lb{paint-order:stroke;stroke:var(--paper);
+    stroke-width:3.5px;stroke-linejoin:round}
+  .street-lb{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.14em;
+    fill:#A79C8B;text-transform:uppercase}
+  .green-lb{font-family:var(--display);font-style:normal;fill:#5E7A4E}
+  .water-lb{font-family:var(--display);fill:#6E93A1}
+
+  #loading{position:absolute;inset:0;display:grid;place-items:center;background:var(--paper);
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+    transition:opacity .5s ease}
+  @media(max-width:900px){ #index{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:700px){
+    /* A 1400 wide plan squeezed into a 320 wide phone is a texture, not a map.
+       The frame goes portrait and the drawing is cropped to the streets around
+       the project at a scale you can actually read, with the rest a drag away. */
+    #stage{aspect-ratio:3/4}
+    /* One scrolling row beats four stacked rows of full width buttons. */
+    #chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+    #chips::-webkit-scrollbar{display:none}
+    .chip{flex:none}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px;margin-top:14px}
+  }
+  @media(max-width:520px){ #index{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top"><div id="chips"></div></div>
+  <div class="stats">
+    <span><b id="s-exch">–</b> minutes to the exchange</span>
+    <span><b id="s-high">–</b> minutes to the high street</span>
+    <span><b id="s-sch">–</b> schools within ten minutes</span>
+    <span><b>12</b> km of connected forest trail</span>
+  </div>
+  <div id="stage">
+    <div class="zoom"><button class="zbtn" id="zin" aria-label="Zoom in">+</button><button class="zbtn" id="zout" aria-label="Zoom out">−</button></div>
+    <div class="attr">Drag to move</div>
+    <div id="loading">Drawing the neighbourhood</div>
+  </div>
+  <div id="index"></div>
+  <p class="note">Culmena is a demonstration project, so this neighbourhood is drawn rather than
+     surveyed. Walking times are measured from the corner of Mitchel Street and Rosenburg Way.</p>
+</div>
+<div id="tip"></div>
+
+<script>
+/* No mapping library. A neighbourhood plan at this scale is a Mercator
+   projection, a few hundred paths and a transform, and pulling d3 in for that
+   costs more to download than everything else on the page put together. It
+   also means the whole map is one file a client can read. */
+const W = 1400, H = 960, PAD = 26;
+const PROJECT = {lat:49.14700, lng:-121.96400, label:'Culmena'};
+const SALES   = {lat:49.15140, lng:-121.96400, label:'Presentation Centre'};
+
+const CATS = [
+  {id:'park', name:'Parks & Trails',      color:'#4E7C52'},
+  {id:'sch',  name:'Schools',             color:'#1F4348'},
+  {id:'ess',  name:'Everyday Essentials', color:'#2F6F7A'},
+  {id:'food', name:'Food & Cafes',        color:'#E76F51'},
+  {id:'shop', name:'Shops & Community',   color:'#C08A2E'}
+];
+
+/* Positions are given in metres from the corner of Mitchel and Rosenburg and
+   converted once, so the walking times below stay true if the grid is moved. */
+const MLAT = 111320, MLNG = 111320 * Math.cos(PROJECT.lat * Math.PI/180);
+const at = (x,y) => ({lat: PROJECT.lat + y/MLAT, lng: PROJECT.lng + x/MLNG});
+
+/* The high street runs along Gislason at 490 metres north. Its shops alternate
+   between the 445 and 535 lines rather than sitting on the road itself, which
+   is both truer to a street with two sides and the only way ten markers fit
+   without touching. The gap at x=0 on the north side is left for the
+   presentation centre pin. */
+const POIS = [
+  {cat:'park', n:1, name:'Rosenburg Green',                 ...at(280,25)},
+  {cat:'park', n:2, name:'Kestrel Playground',              ...at(225,-210)},
+  {cat:'park', n:3, name:'Millrace Park',                   ...at(-428,167)},
+  {cat:'park', n:4, name:'Selkirk Commons',                 ...at(-578,-383)},
+  {cat:'park', n:5, name:'Evergreen Ridge trailhead',       ...at(620,0)},
+  {cat:'park', n:6, name:'Cascara Creek Greenway',          ...at(600,330)},
+  {cat:'park', n:7, name:'Quarry Pond',                     ...at(735,480)},
+
+  {cat:'sch',  n:1, name:'Rosenburg Elementary',            ...at(-225,210)},
+  {cat:'sch',  n:2, name:'Cascara Creek Middle School',     ...at(380,-210)},
+  {cat:'sch',  n:3, name:'Gislason Secondary',              ...at(-120,630)},
+
+  {cat:'ess',  n:1, name:'Rosenburg Exchange',              ...at(230,-60)},
+  {cat:'ess',  n:2, name:'Fieldstone Market',               ...at(-230,445)},
+  {cat:'ess',  n:3, name:'Ridgeway Pharmacy',               ...at(95,445)},
+  {cat:'ess',  n:4, name:'Gislason Avenue Library',         ...at(200,535)},
+  {cat:'ess',  n:5, name:'Alder Row Childcare',             ...at(525,70)},
+  {cat:'ess',  n:6, name:'Selkirk Corner Store',            ...at(-640,-110)},
+
+  {cat:'food', n:1, name:'Cascara Coffee House',            ...at(-160,535)},
+  {cat:'food', n:2, name:'The Copper Kettle Bakery',        ...at(-380,445)},
+  {cat:'food', n:3, name:'The Marten Diner',                ...at(-350,-160)},
+  {cat:'food', n:4, name:'Harrow & Vine',                   ...at(300,445)},
+  {cat:'food', n:5, name:'Two Crows Pizzeria',              ...at(500,445)},
+
+  {cat:'shop', n:1, name:'Rosenburg Community Hall',        ...at(-150,325)},
+  {cat:'shop', n:2, name:'The Potting Shed',                ...at(-300,535)},
+  {cat:'shop', n:3, name:'Gislason Cycle Works',            ...at(420,535)},
+  {cat:'shop', n:4, name:'Evergreen Ridge Visitor Centre',  ...at(660,120)}
+];
+
+/* The headline figure is the walk to the street, not to whichever shop happens
+   to be listed first. Tying it to a shop meant moving that shop moved the
+   number on the page. */
+const HIGH_ST = at(0, 490);
+
+const BBOX = {w:-1000, e:1040, s:-460, n:940};   // metres, matches the data file
+const catById = Object.fromEntries(CATS.map(c => [c.id, c]));
+
+/* Straight-line distance stretched by 1.3 for the way streets actually run,
+   at 80 metres a minute. Same figure the rest of the site quotes. */
+function walkMin(p){
+  const R = 6371000, r = d => d*Math.PI/180;
+  const dLat = r(p.lat - PROJECT.lat), dLng = r(p.lng - PROJECT.lng);
+  const a = Math.sin(dLat/2)**2 + Math.cos(r(PROJECT.lat))*Math.cos(r(p.lat))*Math.sin(dLng/2)**2;
+  return Math.max(1, Math.round(2*R*Math.asin(Math.sqrt(a))*1.3/80));
+}
+
+/* ---- projection ------------------------------------------------------- */
+const my = lat => Math.log(Math.tan(Math.PI/4 + lat*Math.PI/360));
+const B = {
+  w: PROJECT.lng + BBOX.w/MLNG, e: PROJECT.lng + BBOX.e/MLNG,
+  s: PROJECT.lat + BBOX.s/MLAT, n: PROJECT.lat + BBOX.n/MLAT
+};
+/* Both axes have to be in the same units before they are scaled together.
+   Mercator's y is a ratio, effectively radians, so x has to be radians of
+   longitude as well. Feeding it degrees makes the horizontal scale 57 times
+   too large, and since the fit takes the smaller of the two, the whole
+   neighbourhood collapses into a band a few pixels tall. */
+const R = d => d * Math.PI / 180;
+const X0 = R(B.w), X1 = R(B.e), Y0 = my(B.s), Y1 = my(B.n);
+const K = Math.min((W - PAD*2)/(X1 - X0), (H - PAD*2)/(Y1 - Y0));
+const OX = (W - (X1 - X0)*K)/2, OY = (H - (Y1 - Y0)*K)/2;
+const proj = (lng, lat) => [OX + (R(lng) - X0)*K, H - OY - (my(lat) - Y0)*K];
+
+/* ---- what a tag set means -------------------------------------------- */
+function classify(t){
+  if(!t) return null;
+  if(t.natural === 'water') return 'water';
+  if(t.waterway) return 'stream';
+  if(t.leisure === 'nature_reserve') return 'forest';
+  if(t.leisure === 'pitch') return 'pitch';
+  if(t.leisure) return 'park';
+  if(['grass','recreation_ground','orchard','meadow'].includes(t.landuse)) return 'park';
+  if(t.amenity === 'school') return 'school';
+  if(t.highway === 'path' || t.highway === 'footway') return 'trail';
+  if(t.highway === 'primary' || t.highway === 'secondary') return 'major';
+  if(t.highway === 'tertiary') return 'mid';
+  if(t.highway) return 'minor';
+  return null;
+}
+const AREAS = new Set(['water','forest','park','pitch','school']);
+
+const S = document.createElementNS('http://www.w3.org/2000/svg','svg');
+const NS = 'http://www.w3.org/2000/svg';
+const el = (n, a={}) => { const e = document.createElementNS(NS, n);
+  for(const k in a) e.setAttribute(k, a[k]); return e; };
+
+function dOf(pts, close){
+  let d = 'M' + pts.map(p => p[0].toFixed(1)+','+p[1].toFixed(1)).join('L');
+  return close ? d + 'Z' : d;
+}
+
+fetch('map-data.json').then(r => r.json()).then(draw).catch(err => {
+  document.getElementById('loading').textContent = 'Could not load the map data';
+  console.error(err);
+});
+
+function draw(osm){
+  const feats = [];
+  for(const e of osm.elements){
+    if(e.type !== 'way' || !e.geometry) continue;
+    const kind = classify(e.tags);
+    if(!kind) continue;
+    feats.push({kind, tags: e.tags || {}, pts: e.geometry.map(g => proj(g.lon, g.lat)),
+                area: AREAS.has(kind)});
+  }
+  const by = k => feats.filter(f => f.kind === k);
+
+  S.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  S.setAttribute('preserveAspectRatio','xMidYMid slice');
+  const root = el('g');
+  S.appendChild(root);
+  const defs = el('defs'); S.appendChild(defs);
+  const layer = () => { const g = el('g'); root.appendChild(g); return g; };
+
+  layer().appendChild(el('rect',{x:0,y:0,width:W,height:H,fill:'var(--paper)'}));
+
+  const fills = {
+    forest:['var(--forest-fill)','#A9C293'], park:['var(--green)','#B4CB9C'],
+    pitch:['var(--green-2)','#A9C293'], school:['var(--school)','#DCCCA6'],
+    water:['var(--water)','var(--water-e)']
+  };
+  for(const k of ['forest','park','pitch','school','water']){
+    const g = layer();
+    for(const f of by(k)) g.appendChild(el('path',{d:dOf(f.pts,true),
+      fill:fills[k][0], stroke:fills[k][1], 'stroke-width':0.9}));
+  }
+  // The creek reads as a line, not a ribbon, at this scale.
+  { const g = layer();
+    for(const f of by('stream')) g.appendChild(el('path',{d:dOf(f.pts,false),
+      fill:'none', stroke:'var(--water-e)', 'stroke-width':3, 'stroke-linecap':'round'})); }
+
+  // Trails first so the roads sit on top where they cross.
+  { const g = layer();
+    for(const f of by('trail')) g.appendChild(el('path',{d:dOf(f.pts,false),
+      fill:'none', stroke:'#7E9A6B', 'stroke-width':1.8, 'stroke-dasharray':'2 6',
+      'stroke-linecap':'round'})); }
+
+  // Casing then fill, so junctions close up instead of showing seams.
+  const RW = {minor:[5,3.2], mid:[7.5,5.2], major:[10,7.2]};
+  for(const pass of [0,1]){
+    for(const k of ['minor','mid','major']){
+      const g = layer();
+      for(const f of by(k)) g.appendChild(el('path',{d:dOf(f.pts,false), fill:'none',
+        stroke: pass ? 'var(--road)' : 'var(--road-c)',
+        'stroke-width': RW[k][pass], 'stroke-linecap':'round', 'stroke-linejoin':'round'}));
+    }
+  }
+
+  /* Street names ride the line itself. One label per name, on the longest run,
+     and only where the run is long enough to hold the word. */
+  const longest = {};
+  for(const f of by('major').concat(by('mid'), by('minor'))){
+    const n = f.tags.name; if(!n) continue;
+    let px = 0;
+    for(let i=1;i<f.pts.length;i++) px += Math.hypot(f.pts[i][0]-f.pts[i-1][0], f.pts[i][1]-f.pts[i-1][1]);
+    if(!longest[n] || px > longest[n].px) longest[n] = {f, px};
+  }
+  const lbl = layer();
+  let li = 0;
+  for(const [name, {f, px}] of Object.entries(longest)){
+    if(px < name.length*8.5 + 40) continue;
+    let pts = f.pts.slice();
+    // Keep every label reading left to right, and bottom to top when vertical.
+    const dx = pts[pts.length-1][0] - pts[0][0], dy = pts[pts.length-1][1] - pts[0][1];
+    if(Math.abs(dx) > Math.abs(dy) ? dx < 0 : dy > 0) pts.reverse();
+    const id = 'st'+(li++);
+    defs.appendChild(el('path',{id, d:dOf(pts,false)}));
+    const t = el('text',{class:'street-lb', dy:-4});
+    const tp = el('textPath',{startOffset:'50%','text-anchor':'middle'});
+    tp.setAttribute('href','#'+id);
+    tp.textContent = name;
+    t.appendChild(tp); lbl.appendChild(t);
+  }
+
+  // Green and water names, centred on the shape, sized by how big it is.
+  const glb = layer();
+  for(const f of by('forest').concat(by('park'), by('water'))){
+    const n = f.tags.name; if(!n) continue;
+    let cx=0, cy=0, a=0;
+    for(let i=0;i<f.pts.length-1;i++){
+      const [x1,y1]=f.pts[i], [x2,y2]=f.pts[i+1], cr = x1*y2 - x2*y1;
+      a += cr; cx += (x1+x2)*cr; cy += (y1+y2)*cr;
+    }
+    if(!a) continue;
+    a *= .5; cx /= (6*a); cy /= (6*a);
+    const big = Math.abs(a) > 60000;
+    const t = el('text',{x:cx.toFixed(1), y:cy.toFixed(1), 'text-anchor':'middle',
+      'font-size': big ? 22 : 15,
+      class: f.kind === 'water' ? 'water-lb' : 'green-lb'});
+    t.textContent = n; glb.appendChild(t);
+  }
+
+  /* A five minute walk, drawn. 5 min at the same 1.3 detour factor is 308 m,
+     which is the honest radius rather than a round 400. */
+  const pXY = proj(PROJECT.lng, PROJECT.lat);
+  const edge = proj(PROJECT.lng + 308/MLNG, PROJECT.lat);
+  layer().appendChild(el('circle',{cx:pXY[0], cy:pXY[1], r:(edge[0]-pXY[0]).toFixed(1),
+    fill:'none', stroke:'#4E7C52', 'stroke-width':1.3, 'stroke-dasharray':'4 8', opacity:.6}));
+
+  /* ---- markers ---- */
+  const tip = document.getElementById('tip');
+  const mkLayer = layer();
+  const marks = POIS.map(p => {
+    const c = catById[p.cat], xy = proj(p.lng, p.lat);
+    const g = el('g',{class:'mk', transform:`translate(${xy[0].toFixed(1)},${xy[1].toFixed(1)})`});
+    g.appendChild(el('circle',{r:14, fill:c.color, stroke:'#fff', 'stroke-width':2.2}));
+    const t = el('text',{'text-anchor':'middle', dy:4.5, 'font-size':13,
+      'font-weight':700, fill:'#fff', 'pointer-events':'none'});
+    t.textContent = p.n; g.appendChild(t);
+    g.addEventListener('mousemove', ev => {
+      tip.textContent = `${p.name} · ${walkMin(p)} min walk`;
+      tip.style.opacity = 1;
+      tip.style.left = (ev.clientX + 14) + 'px';
+      tip.style.top  = (ev.clientY - 12) + 'px';
+    });
+    g.addEventListener('mouseleave', () => tip.style.opacity = 0);
+    mkLayer.appendChild(g);
+    return {p, g};
+  });
+
+  // Two pins: where the homes are, and where you go to see them.
+  function pin(pt, label, colour, small){
+    const xy = proj(pt.lng, pt.lat);
+    const g = el('g',{transform:`translate(${xy[0].toFixed(1)},${xy[1].toFixed(1)})`,
+      'pointer-events':'none'});
+    const h = small ? 16 : 24;
+    g.appendChild(el('line',{y2:-h, stroke:colour, 'stroke-width':small?2:2.6}));
+    g.appendChild(el('circle',{r:small?6:8, fill:colour, stroke:'#fff', 'stroke-width':small?2.4:3}));
+    const t = el('text',{'text-anchor':'middle', y:-h, dy:-11, fill:'#fff',
+      'font-family':'Fraunces,Georgia,serif', 'font-size':small?14:21, 'font-weight':500});
+    t.textContent = label;
+    const box = el('rect',{fill:colour, rx:small?7:9});
+    g.appendChild(box); g.appendChild(t);
+    mkLayer.appendChild(g);
+    requestAnimationFrame(() => {
+      const b = t.getBBox(), px = small?9:12, py = small?5:7;
+      box.setAttribute('x', b.x-px); box.setAttribute('y', b.y-py);
+      box.setAttribute('width', b.width+px*2); box.setAttribute('height', b.height+py*2);
+    });
+  }
+  pin(SALES, SALES.label, 'var(--terra)', true);
+  pin(PROJECT, PROJECT.label, 'var(--forest)', false);
+
+  /* ---- pan and zoom ---- */
+  let k = 1, tx = 0, ty = 0;
+  const apply = () => root.setAttribute('transform', `translate(${tx},${ty}) scale(${k})`);
+  function clamp(){
+    k = Math.min(4, Math.max(1, k));
+    tx = Math.min(0, Math.max(W - W*k, tx));
+    ty = Math.min(0, Math.max(H - H*k, ty));
+  }
+  function zoomAt(cx, cy, f){
+    const nk = Math.min(4, Math.max(1, k*f));
+    tx = cx - (cx - tx) * (nk/k); ty = cy - (cy - ty) * (nk/k);
+    k = nk; clamp(); apply();
+  }
+  const svgPt = ev => { const r = S.getBoundingClientRect();
+    return [(ev.clientX - r.left) * W/r.width, (ev.clientY - r.top) * H/r.height]; };
+  /* Scroll belongs to the page. The map only takes the wheel when a modifier
+     is held, which is what stops the map from swallowing the scroll of anyone
+     who happens to pass over it on the way down the page. */
+  S.addEventListener('wheel', ev => {
+    if(!ev.ctrlKey && !ev.metaKey) return;
+    ev.preventDefault();
+    const [cx,cy] = svgPt(ev); zoomAt(cx, cy, ev.deltaY < 0 ? 1.18 : 1/1.18); }, {passive:false});
+  let drag = null;
+  S.addEventListener('pointerdown', ev => { drag = {x:ev.clientX, y:ev.clientY, tx, ty};
+    S.classList.add('drag'); S.setPointerCapture(ev.pointerId); });
+  S.addEventListener('pointermove', ev => { if(!drag) return;
+    const r = S.getBoundingClientRect();
+    tx = drag.tx + (ev.clientX - drag.x) * W/r.width;
+    ty = drag.ty + (ev.clientY - drag.y) * H/r.height;
+    clamp(); apply(); });
+  const stop = () => { drag = null; S.classList.remove('drag'); };
+  S.addEventListener('pointerup', stop); S.addEventListener('pointercancel', stop);
+  document.getElementById('zin').onclick  = () => zoomAt(W/2, H/2, 1.5);
+  document.getElementById('zout').onclick = () => zoomAt(W/2, H/2, 1/1.5);
+  function flyTo(p){
+    const xy = proj(p.lng, p.lat);
+    k = 2.2; tx = W/2 - xy[0]*k; ty = H/2 - xy[1]*k; clamp();
+    root.style.transition = 'transform .5s cubic-bezier(.2,.7,.2,1)';
+    apply();
+    setTimeout(() => root.style.transition = '', 520);
+  }
+
+  /* ---- chips and the numbered index ---- */
+  const chips = document.getElementById('chips'), index = document.getElementById('index');
+  for(const c of CATS){
+    const col = document.createElement('div');
+    col.className = 'col';
+    col.innerHTML = `<div class="cat-h"><span class="sw" style="background:${c.color}"></span>${c.name}</div>`;
+    index.appendChild(col);
+
+    for(const m of marks.filter(m => m.p.cat === c.id)){
+      const row = document.createElement('div');
+      row.className = 'lg-item';
+      row.innerHTML = `<span class="n" style="color:${c.color}">${m.p.n}</span>` +
+        `<span>${m.p.name}<span class="w">&ensp;·&ensp;${walkMin(m.p)} min</span></span>`;
+      col.appendChild(row);
+      row.addEventListener('mouseenter', () => m.g.classList.add('hl'));
+      row.addEventListener('mouseleave', () => m.g.classList.remove('hl'));
+      row.addEventListener('click', () => flyTo(m.p));
+      m.g.addEventListener('click', () => {
+        row.classList.add('hl');
+        setTimeout(() => row.classList.remove('hl'), 1600);
+      });
+    }
+
+    const b = document.createElement('button');
+    b.className = 'chip on';
+    b.innerHTML = `<span class="sw" style="background:${c.color}"></span>${c.name}`;
+    let on = true;
+    b.addEventListener('click', () => {
+      on = !on;
+      b.classList.toggle('on', on);
+      col.classList.toggle('off', !on);
+      marks.filter(m => m.p.cat === c.id).forEach(m => m.g.style.display = on ? '' : 'none');
+    });
+    chips.appendChild(b);
+  }
+
+  // The headline figures come from the same walk function as the pins, so the
+  // page and the map can never drift apart.
+  const find = n => POIS.find(p => p.name === n);
+  document.getElementById('s-exch').textContent = walkMin(find('Rosenburg Exchange'));
+  document.getElementById('s-high').textContent = walkMin(HIGH_ST);
+  document.getElementById('s-sch').textContent  =
+    POIS.filter(p => p.cat === 'sch' && walkMin(p) <= 10).length;
+
+  const stage = document.getElementById('stage');
+  stage.insertBefore(S, stage.firstChild);
+  const load = document.getElementById('loading');
+  load.style.opacity = 0;
+  setTimeout(() => load.remove(), 500);
+
+  // The parent sizes the iframe from this, so it never guesses a height.
+  const report = () => {
+    const h = Math.ceil(document.querySelector('.card').getBoundingClientRect().height);
+    parent.postMessage({culmenaMap:'height', height:h}, '*');
+  };
+  new ResizeObserver(report).observe(document.querySelector('.card'));
+  report();
+}
+</script>
+</body>
+</html>

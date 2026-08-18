@@ -84,7 +84,7 @@
       <span class="cb-label">Ask about ${PROJECT.name}</span>
     </button>
 
-    <section class="cb-panel" role="dialog" aria-label="Ask about ${PROJECT.name}" aria-hidden="true">
+    <div class="cb-panel" role="dialog" aria-label="Ask about ${PROJECT.name}" aria-hidden="true">
       <header class="cb-head">
         <div>
           <b>${PROJECT.name}</b>
@@ -100,7 +100,7 @@
         <button class="cb-send" aria-label="Send">&#8594;</button>
       </form>
       <p class="cb-note">Demo only. A production assistant connects to any AI platform, or to a model trained on your own material.</p>
-    </section>`;
+    </div>`;
   document.body.appendChild(root);
 
   const launch = root.querySelector(".cb-launch");
