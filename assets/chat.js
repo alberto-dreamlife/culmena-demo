@@ -15,12 +15,20 @@
   const PROJECT = {
     name: "Culmena",
     greeting: "Ask me about the homes, the floor plans, the amenities or the neighbourhood.",
-    chips: ["The homes", "Floor plans", "Price", "Amenities", "Presentation centre", "When can I move in"]
+    chips: ["The homes", "Floor plans", "Price", "Appliances", "Amenities", "When can I move in"]
   };
 
   /* Each entry is a set of trigger words and the answer. First match wins, so
      the more specific entries are listed before the general ones. */
   const KB = [
+    /* strata sits above price because "how much are the strata fees" contains
+       "how much", and with price first the question about fees was answered
+       with the paragraph about the price list. First match wins, so the more
+       specific question has to be asked first. */
+    { k: ["strata", "fee", "maintenance", "gst", "tax", "warranty", "deposit structure"],
+      a: `That level of detail sits in the disclosure statement, which goes to registered buyers. I would rather point you there than guess at a number.`,
+      cta: true },
+
     { k: ["price", "cost", "how much", "pricing", "afford", "deposit"],
       a: `Pricing has not been released yet. Register and you will get plans and pricing before the public launch, which is when the first homes are allocated.`,
       cta: true },
@@ -30,6 +38,21 @@
 
     { k: ["home", "house", "unit", "how many", "townhome", "multiplex", "collection"],
       a: `107 homes in the collection, arranged as multiplex townhomes around a central green. <a href="homes.html">See the homes</a>.` },
+
+    /* Placed above the schemes entry on purpose: someone asking about the oven
+       wants the oven, not a paragraph about colour palettes. Single letter or
+       two letter keys are avoided throughout because the match is a substring
+       one, so "ev" would fire on "every" and "level". */
+    { k: ["features and finishes", "finishes sheet", "spec sheet", "specification",
+          "brochure", "download", "pdf", "print"],
+      a: `The <a href="features.html">features and finishes sheet</a> has the whole specification, both schemes side by side and the material samples. It prints to three A4 pages straight from the browser.` },
+
+    { k: ["appliance", "bosch", "oven", "cooktop", "stove", "dishwasher", "fridge",
+          "refrigerator", "microwave", "hood", "caesarstone", "quartz", "countertop", "counter"],
+      a: `Bosch 500 Series throughout, integrated behind cabinet panels: an induction cooktop, a wall oven with convection, a 42 decibel dishwasher and a microwave in a drawer. Counters and the full height backsplash are Caesarstone quartz. The whole list is on the <a href="features.html">features and finishes sheet</a>, which prints to three pages.` },
+
+    { k: ["air conditioning", "aircon", "cooling", "heating", "furnace", "hvac", "radiator"],
+      a: `Forced air heating in every home, with the rough-in for cooling already in place so it can be added later without opening walls. The primary bathroom floor is warmed underfoot. See <a href="homes.html#finishes">Features and Finishes</a>.` },
 
     { k: ["kitchen", "scheme", "interior", "finish", "material", "colour", "color", "cabinet"],
       a: `Two interior schemes. Haven is soft oak, pale quartz and brushed nickel. Ridge is deep slate cabinetry, smoked oak and matte black. Both are in the <a href="gallery.html">gallery</a>.` },
@@ -44,16 +67,12 @@
     { k: ["presentation", "centre", "center", "showroom", "visit", "tour", "open", "hours", "viewing"],
       a: `The presentation centre is at Mitchel Street and Gislason Avenue, open daily from 12 to 5pm. Worth calling ahead on 555.010.2026 during the pre-launch period.` },
 
-    { k: ["parking", "car", "garage", "bike", "storage"],
-      a: `Parking and storage details are part of the disclosure package rather than the website. Register and they will come to you with the plans.`,
+    { k: ["parking", "car", "garage", "bike", "bicycle", "charger", "charging", "electric"],
+      a: `Two cars side by side in a private garage, with an outlet for an electric car roughed in and a wall rail for bicycles, which is drawn on every floor plan. Locker and visitor parking counts are in the disclosure package.`,
       cta: true },
 
     { k: ["complete", "completion", "move in", "occupancy", "ready", "when", "timeline", "construction"],
       a: `The completion date is not published yet. Registered buyers hear first, and well before the public announcement.`,
-      cta: true },
-
-    { k: ["strata", "fee", "maintenance", "gst", "tax", "warranty", "deposit structure"],
-      a: `That level of detail sits in the disclosure statement, which goes to registered buyers. I would rather point you there than guess at a number.`,
       cta: true },
 
     { k: ["register", "sign up", "contact", "agent", "realtor", "call", "email"],

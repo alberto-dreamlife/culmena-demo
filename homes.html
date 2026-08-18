@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=20260818c">
+<link rel="stylesheet" href="assets/site.css?v=20260818e">
 <style>
   .duo{display:grid;grid-template-columns:1.35fr 1fr;gap:var(--gap);margin-top:clamp(44px,5vw,70px)}
   .duo .frame{aspect-ratio:3/2}
@@ -44,6 +44,96 @@
   @media(max-width:760px){
     .duo,.schemes,.amen{grid-template-columns:1fr}
     .duo .frame:last-child{margin-top:0;aspect-ratio:3/2}
+  }
+
+  /* ---- features and finishes ----
+     A printed finishes sheet reads as a list of promises, not a table of parts.
+     So: one category per band, a rule between bands, the item on the left in the
+     reading weight and the qualifier on the right in the quiet one. No bullets,
+     because a bullet turns a promise into an inventory. */
+  .ff-switch{display:inline-flex;gap:6px;margin-top:clamp(28px,3.4vw,44px);
+      padding:5px;border:1px solid var(--line);border-radius:999px;background:#fff}
+  .ff-pill{border:0;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;
+      font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--muted);padding:11px 26px;border-radius:999px;
+      transition:background .3s ease,color .3s ease}
+  .ff-pill.on{background:var(--forest);color:#fff}
+  .ff-pill:not(.on):hover{color:var(--forest)}
+
+  .ff{margin-top:clamp(30px,3.6vw,48px);border-top:1px solid var(--line)}
+  .ff-group{display:grid;grid-template-columns:minmax(190px,3fr) 8fr;
+      gap:clamp(18px,3vw,56px);padding:clamp(30px,3.4vw,48px) 0;
+      border-bottom:1px solid var(--line)}
+  .ff-group h3{font-size:clamp(23px,2.3vw,31px);font-weight:500;line-height:1.1;
+      align-self:start;position:sticky;top:96px}
+  .ff-item{display:flex;justify-content:space-between;align-items:baseline;
+      gap:clamp(16px,3vw,40px);padding:15px 0;border-bottom:1px solid rgba(31,67,72,.08)}
+  .ff-item:last-child{border-bottom:0;padding-bottom:0}
+  .ff-item b{font-weight:500;font-size:clamp(15.5px,1.15vw,17.5px);line-height:1.45;color:var(--ink)}
+  .ff-item span{flex:none;max-width:46%;text-align:right;color:var(--muted);
+      font-size:13.5px;line-height:1.5}
+  /* The scheme lines are swapped, not hidden and re-laid-out, so the band does
+     not jump in height when you switch. */
+  .ff-var{display:none}
+  .ff-var.show{display:flex}
+
+  .ff-mat{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,1.8vw,26px);
+      margin-top:clamp(34px,4vw,56px)}
+  .mat{margin:0;display:none}
+  .mat.show{display:block}
+  .mat i{display:block;aspect-ratio:5/4;border-radius:16px;border:1px solid rgba(31,67,72,.10);
+      box-shadow:0 10px 26px rgba(31,67,72,.08)}
+  .mat figcaption{margin-top:13px;font-size:13px;color:var(--muted);line-height:1.5}
+  .mat figcaption b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:16.5px;
+      color:var(--ink);margin-bottom:2px}
+
+  /* Grain, speckle and sheen, built rather than photographed. Placeholders that
+     are honest about being materials instead of flat chips of colour. */
+  .sw-oak-pale{background:
+      repeating-linear-gradient(92deg,rgba(120,86,48,.13) 0 1px,transparent 1px 9px),
+      repeating-linear-gradient(92deg,rgba(120,86,48,.07) 0 2px,transparent 2px 23px),
+      linear-gradient(160deg,#E4D6BE,#D6C3A4)}
+  .sw-oak-smoked{background:
+      repeating-linear-gradient(92deg,rgba(0,0,0,.22) 0 1px,transparent 1px 9px),
+      repeating-linear-gradient(92deg,rgba(0,0,0,.12) 0 2px,transparent 2px 23px),
+      linear-gradient(160deg,#6B5844,#4A3B2C)}
+  /* Five speckle layers on prime tile sizes. With even, close sizes the layers
+     line up every few centimetres and the stone reads as a dot grid, which is
+     the one thing quartz never looks like. */
+  .sw-quartz-light{background:
+      radial-gradient(circle at 21% 37%,rgba(146,142,130,.34) 0 1.1px,transparent 1.5px),
+      radial-gradient(circle at 73% 14%,rgba(146,142,130,.26) 0 1.5px,transparent 1.9px),
+      radial-gradient(circle at 47% 79%,rgba(120,116,104,.22) 0 .9px,transparent 1.2px),
+      radial-gradient(circle at 88% 58%,rgba(146,142,130,.28) 0 1.7px,transparent 2.1px),
+      radial-gradient(circle at 12% 88%,rgba(120,116,104,.18) 0 1.2px,transparent 1.6px),
+      linear-gradient(150deg,#F6F4EF,#E9E6DD)}
+  .sw-quartz-dark{background:
+      radial-gradient(circle at 21% 37%,rgba(255,255,255,.26) 0 1.1px,transparent 1.5px),
+      radial-gradient(circle at 73% 14%,rgba(255,255,255,.18) 0 1.5px,transparent 1.9px),
+      radial-gradient(circle at 47% 79%,rgba(0,0,0,.16) 0 .9px,transparent 1.2px),
+      radial-gradient(circle at 88% 58%,rgba(255,255,255,.20) 0 1.7px,transparent 2.1px),
+      radial-gradient(circle at 12% 88%,rgba(0,0,0,.13) 0 1.2px,transparent 1.6px),
+      linear-gradient(150deg,#7E7E78,#5F615C)}
+  .sw-quartz-light,.sw-quartz-dark{background-size:23px 29px,37px 31px,41px 43px,53px 47px,59px 61px,100% 100%}
+  .sw-nickel{background:linear-gradient(112deg,#C9CCC9 0%,#EDEFEC 22%,#B9BDBA 44%,#DDE0DC 66%,#AFB3B0 100%)}
+  .sw-black{background:linear-gradient(140deg,#2A2B27,#171815)}
+  .sw-tile-white{background:linear-gradient(150deg,#FBFAF6,#EFEDE6)}
+  .sw-tile-charcoal{background:linear-gradient(150deg,#4A4B46,#373834)}
+
+  .ff-cta{display:flex;align-items:center;gap:clamp(14px,2vw,26px);flex-wrap:wrap;
+      margin-top:clamp(30px,3.6vw,46px)}
+  .ff-cta span{font-size:13.5px;color:var(--muted)}
+  .ff-note{margin-top:clamp(26px,3vw,40px);font-size:12px;line-height:1.7;color:var(--muted);max-width:78ch}
+
+  @media(max-width:900px){
+    .ff-group{grid-template-columns:1fr;gap:14px;position:static}
+    .ff-group h3{position:static}
+    .ff-mat{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:560px){
+    /* The qualifier drops under the item rather than fighting it for the line. */
+    .ff-item{flex-direction:column;align-items:flex-start;gap:3px}
+    .ff-item span{text-align:left;max-width:none}
   }
 
   /* Safari 26 ignores theme-color and samples a full-viewport fixed layer
@@ -161,6 +251,99 @@
       <a class="btn btn-dark" href="floorplans.html">View floor plans <span class="arr">→</span></a>
       <a class="btn btn-light" href="gallery.html">Open the gallery <span class="arr">→</span></a>
     </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES AND FINISHES ============
+     Set like the printed sheet a sales centre hands across the desk, not like a
+     spec list: a category on the left, the lines running down the right, and a
+     hairline between them. The two lines that actually change between schemes
+     are the only thing the toggle touches, because the appliance package is the
+     same in both and pretending otherwise would be a lie a buyer can check. -->
+<section id="finishes" style="background:var(--sand)">
+  <div class="wrap">
+    <div class="kicker reveal">Features and Finishes</div>
+    <h2 class="title display reveal d1">Down to the <i>last hinge.</i></h2>
+    <p class="lead reveal d2">The same specification in every home, in your choice of two schemes.
+       What follows is what is in the contract, not what we hope to fit.</p>
+
+    <div class="ff-switch reveal d2" role="group" aria-label="Choose a scheme">
+      <button type="button" class="ff-pill on" data-scheme="haven" aria-pressed="true">Haven</button>
+      <button type="button" class="ff-pill" data-scheme="ridge" aria-pressed="false">Ridge</button>
+    </div>
+
+    <div class="ff reveal d1">
+
+      <div class="ff-group">
+        <h3 class="display">The kitchen</h3>
+        <div class="ff-list">
+          <div class="ff-item ff-var" data-scheme="haven"><b>Pale oak cabinetry, flat panel</b><span>Integrated pulls, no handles</span></div>
+          <div class="ff-item ff-var" data-scheme="ridge"><b>Slate cabinetry with smoked oak</b><span>Integrated pulls, no handles</span></div>
+          <div class="ff-item ff-var" data-scheme="haven"><b>Caesarstone Frosty Carrina counters</b><span>Full height backsplash, 20 mm</span></div>
+          <div class="ff-item ff-var" data-scheme="ridge"><b>Caesarstone Rugged Concrete counters</b><span>Full height backsplash, 20 mm</span></div>
+          <div class="ff-item"><b>Bosch 500 Series throughout</b><span>Behind cabinet panels, not on show</span></div>
+          <div class="ff-item"><b>Induction cooktop</b><span>Four zones</span></div>
+          <div class="ff-item"><b>Wall oven with convection</b><span></span></div>
+          <div class="ff-item"><b>Dishwasher at 42 decibels</b><span>Quiet enough to run through dinner</span></div>
+          <div class="ff-item"><b>Microwave in a drawer</b><span>Below the counter, out of the sightline</span></div>
+          <div class="ff-item"><b>Undermount sink, pull down spray</b><span></span></div>
+          <div class="ff-item"><b>Hood ducted to the outside</b><span>Not recirculating</span></div>
+          <div class="ff-item"><b>Soft close on every door and drawer</b><span></span></div>
+        </div>
+      </div>
+
+      <div class="ff-group">
+        <h3 class="display">The bathrooms</h3>
+        <div class="ff-list">
+          <div class="ff-item ff-var" data-scheme="haven"><b>Brushed nickel fittings</b><span>Matte white wall tile</span></div>
+          <div class="ff-item ff-var" data-scheme="ridge"><b>Matte black fittings</b><span>Charcoal wall tile</span></div>
+          <div class="ff-item"><b>Caesarstone counters, undermount basins</b><span></span></div>
+          <div class="ff-item"><b>Porcelain tile floors</b><span>Warmed underfoot in the primary</span></div>
+          <div class="ff-item"><b>Rain head and handheld on a slide bar</b><span>Primary ensuite</span></div>
+          <div class="ff-item"><b>Dual flush toilets</b><span></span></div>
+          <div class="ff-item"><b>Mirrored cabinet with the light built in</b><span></span></div>
+        </div>
+      </div>
+
+      <div class="ff-group">
+        <h3 class="display">The home</h3>
+        <div class="ff-list">
+          <div class="ff-item ff-var" data-scheme="haven"><b>Pale oak flooring, wide plank</b><span>Engineered, through the main level</span></div>
+          <div class="ff-item ff-var" data-scheme="ridge"><b>Smoked oak flooring, wide plank</b><span>Engineered, through the main level</span></div>
+          <div class="ff-item"><b>Nine foot ceilings on the main floor</b><span></span></div>
+          <div class="ff-item"><b>Forced air heating</b><span>Cooling roughed in, ready when you are</span></div>
+          <div class="ff-item"><b>Triple glazing, black aluminium frames</b><span></span></div>
+          <div class="ff-item"><b>Washer and dryer in a closet of their own</b><span>Not in the garage</span></div>
+          <div class="ff-item"><b>Two cars side by side in the garage</b><span>EV outlet roughed in</span></div>
+          <div class="ff-item"><b>Bicycle rail on the garage wall</b><span>As drawn on every plan</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- The swatches are procedural for now: grain, speckle and sheen built in
+         CSS rather than photographed. When the kitchen renders come back with
+         their textures, these get cropped from the same materials so the page
+         and the image are describing one thing. -->
+    <div class="ff-mat reveal d1">
+      <figure class="mat" data-scheme="haven"><i class="sw-oak-pale"></i><figcaption><b>Pale oak</b>Cabinetry and flooring</figcaption></figure>
+      <figure class="mat" data-scheme="haven"><i class="sw-quartz-light"></i><figcaption><b>Frosty Carrina</b>Caesarstone quartz</figcaption></figure>
+      <figure class="mat" data-scheme="haven"><i class="sw-nickel"></i><figcaption><b>Brushed nickel</b>Fittings and hardware</figcaption></figure>
+      <figure class="mat" data-scheme="haven"><i class="sw-tile-white"></i><figcaption><b>Matte white</b>Wall tile</figcaption></figure>
+
+      <figure class="mat" data-scheme="ridge"><i class="sw-oak-smoked"></i><figcaption><b>Smoked oak</b>Accents and flooring</figcaption></figure>
+      <figure class="mat" data-scheme="ridge"><i class="sw-quartz-dark"></i><figcaption><b>Rugged Concrete</b>Caesarstone quartz</figcaption></figure>
+      <figure class="mat" data-scheme="ridge"><i class="sw-black"></i><figcaption><b>Matte black</b>Fittings and hardware</figcaption></figure>
+      <figure class="mat" data-scheme="ridge"><i class="sw-tile-charcoal"></i><figcaption><b>Charcoal</b>Wall tile</figcaption></figure>
+    </div>
+
+    <div class="ff-cta reveal">
+      <a class="btn btn-dark" href="features.html">The full sheet <span class="arr">&rarr;</span></a>
+      <span>Three pages, printable, both schemes side by side.</span>
+    </div>
+
+    <p class="ff-note reveal">Specifications are current as of the date shown and the developer reserves the
+       right to substitute materials of equal or better quality. Culmena is a demonstration project. E.&amp;O.E.</p>
   </div>
 </section>
 
@@ -367,7 +550,27 @@
 </footer>
 </div><!-- /.page -->
 
-<script src="assets/site.js?v=20260818c"></script>
-<script src="assets/chat.js?v=20260818c" defer></script>
+<script>
+/* Features and finishes: the scheme toggle swaps only the lines that actually
+   change. Everything else is common to both, which is the point the section is
+   making, so hiding and re-showing the whole list would be theatre. */
+(function () {
+  const pills = document.querySelectorAll(".ff-pill");
+  if (!pills.length) return;
+  const vary = document.querySelectorAll(".ff-var, .mat");
+  function pick(scheme) {
+    pills.forEach(p => {
+      const on = p.dataset.scheme === scheme;
+      p.classList.toggle("on", on);
+      p.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    vary.forEach(el => el.classList.toggle("show", el.dataset.scheme === scheme));
+  }
+  pills.forEach(p => p.addEventListener("click", () => pick(p.dataset.scheme)));
+  pick("haven");
+})();
+</script>
+<script src="assets/site.js?v=20260818e"></script>
+<script src="assets/chat.js?v=20260818e" defer></script>
 </body>
 </html>
