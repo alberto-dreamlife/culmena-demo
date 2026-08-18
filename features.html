@@ -161,9 +161,29 @@ h2.band:first-of-type{margin-top:8mm}
      inside the page, so the browser's own print to PDF produces the file: no
      second copy of this document to keep in step with the first. -->
 <div class="bar">
-  <a class="back" href="homes.html">&#8249;&ensp;Back to the homes</a>
+  <a class="back" id="back" href="homes.html">&#8249;&ensp;Back to the homes</a>
   <button type="button" class="save" onclick="window.print()">Save as PDF</button>
 </div>
+<script>
+/* The sheet is reached in two ways and the left control has to mean the right
+   thing in both. Opened in its own tab from the homes page there is nothing
+   behind it, so "back" would send this tab to a page the other tab is already
+   showing; it becomes "close" instead. Opened directly, by a link or a search
+   result, back to the homes is exactly right.
+   close() is refused by some browsers when the tab was not script opened, so if
+   the tab is still here a moment later we fall back to navigating. */
+(function () {
+  var back = document.getElementById("back");
+  if (history.length > 1) return;
+  back.innerHTML = "Close&ensp;&#10005;";
+  back.href = "#";
+  back.addEventListener("click", function (e) {
+    e.preventDefault();
+    window.close();
+    setTimeout(function () { location.href = "homes.html"; }, 250);
+  });
+})();
+</script>
 
 <!-- ============ 1 · COVER ============ -->
 <section class="sheet cover">

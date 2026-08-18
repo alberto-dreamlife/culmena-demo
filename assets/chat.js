@@ -45,11 +45,11 @@
        one, so "ev" would fire on "every" and "level". */
     { k: ["features and finishes", "finishes sheet", "spec sheet", "specification",
           "brochure", "download", "pdf", "print"],
-      a: `The <a href="features.html">features and finishes sheet</a> has the whole specification, both schemes side by side and the material samples. It prints to three A4 pages straight from the browser.` },
+      a: `The <a href="features.html" target="_blank" rel="noopener">features and finishes sheet</a> has the whole specification, both schemes side by side and the material samples. It prints to three A4 pages straight from the browser.` },
 
     { k: ["appliance", "bosch", "oven", "cooktop", "stove", "dishwasher", "fridge",
           "refrigerator", "microwave", "hood", "caesarstone", "quartz", "countertop", "counter"],
-      a: `Bosch 500 Series throughout, integrated behind cabinet panels: an induction cooktop, a wall oven with convection, a 42 decibel dishwasher and a microwave in a drawer. Counters and the full height backsplash are Caesarstone quartz. The whole list is on the <a href="features.html">features and finishes sheet</a>, which prints to three pages.` },
+      a: `Bosch 500 Series throughout, integrated behind cabinet panels: an induction cooktop, a wall oven with convection, a 42 decibel dishwasher and a microwave in a drawer. Counters and the full height backsplash are Caesarstone quartz. The whole list is on the <a href="features.html" target="_blank" rel="noopener">features and finishes sheet</a>, which prints to three pages.` },
 
     { k: ["air conditioning", "aircon", "cooling", "heating", "furnace", "hvac", "radiator"],
       a: `Forced air heating in every home, with the rough-in for cooling already in place so it can be added later without opening walls. The primary bathroom floor is warmed underfoot. See <a href="homes.html#finishes">Features and Finishes</a>.` },
