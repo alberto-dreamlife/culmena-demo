@@ -300,11 +300,23 @@ document.querySelectorAll("form.steps").forEach(form => {
    Supports: arrows, keyboard, swipe, click-to-zoom, drag-to-pan,
    wheel zoom, pinch zoom.
    ============================================================ */
+
+/* ---------- full screen viewer ----------
+   One stage, two possible occupants: a still or a clip. What you click in the
+   page is what opens. A figure carrying a clip used to open that clip's own
+   first frame as a photograph, so you watched a move finish and were then sent
+   back to its beginning, frozen. Stills keep the zoom and the pan. Clips get
+   the browser's own controls and no zoom, because the controls need the pointer
+   and nobody opens a video in order to magnify it. */
 const Lightbox = (() => {
-  let items = [], i = 0, el = null, img = null, capEl = null, countEl = null;
+  let items = [], i = 0, el = null, img = null, vid = null, capEl = null, countEl = null;
   let scale = 1, tx = 0, ty = 0, dragging = false, sx = 0, sy = 0, px = 0, py = 0;
   let baseW = 0, baseH = 0, moved = false;
   const MAXS = 4;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  const isVid = () => !!(items[i] && items[i].video);
+  const media = () => (isVid() ? vid : img);
 
   function build() {
     el = document.createElement("div");
@@ -316,13 +328,17 @@ const Lightbox = (() => {
       <button class="lb-close" aria-label="Close">&#10005;</button>
       <button class="lb-prev" aria-label="Previous">&#8249;</button>
       <button class="lb-next" aria-label="Next">&#8250;</button>
-      <div class="lb-stage"><img alt=""></div>
+      <div class="lb-stage">
+        <img alt="">
+        <video class="lb-vid" playsinline controls loop muted preload="none"></video>
+      </div>
       <div class="lb-bar">
         <div class="lb-cap"></div>
         <div class="lb-count"></div>
       </div>`;
     document.body.appendChild(el);
     img = el.querySelector("img");
+    vid = el.querySelector("video");
     capEl = el.querySelector(".lb-cap");
     countEl = el.querySelector(".lb-count");
 
@@ -332,6 +348,10 @@ const Lightbox = (() => {
     el.addEventListener("click", e => {
       if (e.target === el || e.target.classList.contains("lb-stage")) close();
     });
+
+    /* Clicking the clip, or its controls, must not reach the backdrop handler
+       above: pressing play would otherwise close the viewer. */
+    vid.addEventListener("click", e => e.stopPropagation());
 
     /* click to toggle zoom — skipped if the pointer was dragged, otherwise
        every pan would end in a click that resets the zoom */
@@ -343,6 +363,7 @@ const Lightbox = (() => {
 
     /* wheel zoom, anchored on the cursor */
     el.addEventListener("wheel", e => {
+      if (isVid()) return;
       e.preventDefault();
       const next = clamp(scale * (e.deltaY < 0 ? 1.16 : 0.86), 1, MAXS);
       if (next === 1) { reset(); return; }
@@ -368,13 +389,14 @@ const Lightbox = (() => {
     img.addEventListener("pointerup", endDrag);
     img.addEventListener("pointercancel", endDrag);
 
-    /* swipe between images when not zoomed */
+    /* swipe between items when not zoomed. Skipped on a clip, where a
+       horizontal drag is how you scrub. */
     let tsx = 0, tsy = 0;
     el.addEventListener("touchstart", e => {
       tsx = e.touches[0].clientX; tsy = e.touches[0].clientY;
     }, { passive: true });
     el.addEventListener("touchend", e => {
-      if (scale > 1 || items.length < 2) return;
+      if (scale > 1 || items.length < 2 || isVid()) return;
       const dx = e.changedTouches[0].clientX - tsx;
       const dy = e.changedTouches[0].clientY - tsy;
       if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
@@ -388,21 +410,20 @@ const Lightbox = (() => {
     });
   }
 
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-
-  /* Size of the image with no transform applied. Panning limits are derived
-     from this, so they have to be measured while the transform is off. */
+  /* Size of the media with no transform applied. Panning limits are derived
+     from this, so it has to be measured while the transform is off. */
   function measure() {
-    const prev = img.style.transform;
-    img.style.transform = "none";
-    const r = img.getBoundingClientRect();
+    const m = media();
+    const prev = m.style.transform;
+    m.style.transform = "none";
+    const r = m.getBoundingClientRect();
     baseW = r.width; baseH = r.height;
-    img.style.transform = prev;
+    m.style.transform = prev;
   }
 
-  /* Keep the image reachable: you can always pan far enough to bring any
-     edge into view (plus a little slack so the bottom clears the caption),
-     but never so far that it drifts off into empty space. */
+  /* Keep the image reachable: you can always pan far enough to bring any edge
+     into view, plus a little slack so the bottom clears the caption, but never
+     so far that it drifts off into empty space. */
   function clampT() {
     const st = el.querySelector(".lb-stage").getBoundingClientRect();
     const slack = 90;
@@ -413,21 +434,20 @@ const Lightbox = (() => {
   }
 
   const applyT = () => {
-    img.classList.toggle("zoomed", scale > 1);
+    const m = media();
+    m.classList.toggle("zoomed", scale > 1);
     el.classList.toggle("is-zoomed", scale > 1);
-    img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    m.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
   };
   const reset = () => { scale = 1; tx = 0; ty = 0; applyT(); };
 
-  /* Anchor the zoom on the pointer: a point sitting ox from the centre lands
-     at ox*s after scaling, so it needs translating back by -ox*(s-1) to stay
-     put. (Dividing by s here is what pulled the plan off-centre.) */
+  /* Anchor the zoom on the pointer: a point sitting ox from the centre lands at
+     ox*s after scaling, so it needs translating back by -ox*(s-1) to stay put. */
   function zoomAt(s, e) {
     if (!baseW) measure();
     const stage = el.querySelector(".lb-stage").getBoundingClientRect();
     const centreX = stage.left + stage.width / 2;
     const centreY = stage.top + stage.height / 2;
-    /* offset of the cursor from the image centre, in untransformed units */
     const ox = (e.clientX - centreX - tx) / scale;
     const oy = (e.clientY - centreY - ty) / scale;
     scale = s;
@@ -436,21 +456,50 @@ const Lightbox = (() => {
     clampT(); applyT();
   }
 
+  /* Release the decoder rather than leaving a 1080p clip running behind a
+     closed viewer or an image that replaced it. */
+  function dropVideo() {
+    vid.pause();
+    vid.removeAttribute("src");
+    vid.load();
+  }
+
   function render() {
     const it = items[i];
     reset();
     baseW = baseH = 0;
-    img.style.opacity = 0;
-    const show = () => {
-      img.src = it.src;
-      img.style.opacity = 1;
-      /* measure once the browser has laid the new image out */
+    el.classList.toggle("is-video", !!it.video);
+
+    if (it.video) {
+      img.style.display = "none";
+      vid.style.display = "";
+      /* The still is the poster, so the first frame is already on screen while
+         the file loads and the stage never opens on a black rectangle. */
+      if (it.src) vid.poster = it.src;
+      if (vid.getAttribute("src") !== it.video) {
+        vid.setAttribute("src", it.video);
+        vid.load();
+      }
+      vid.currentTime = 0;
+      vid.play().catch(() => {});
       requestAnimationFrame(() => requestAnimationFrame(measure));
-    };
-    const pre = new Image();
-    pre.onload = show;
-    pre.src = it.src;
-    if (pre.complete) show();
+    } else {
+      dropVideo();
+      vid.style.display = "none";
+      img.style.display = "";
+      img.style.opacity = 0;
+      const show = () => {
+        img.src = it.src;
+        img.style.opacity = 1;
+        /* measure once the browser has laid the new image out */
+        requestAnimationFrame(() => requestAnimationFrame(measure));
+      };
+      const pre = new Image();
+      pre.onload = show;
+      pre.src = it.src;
+      if (pre.complete) show();
+    }
+
     img.alt = it.title || "";
     capEl.innerHTML = (it.title ? `<b>${it.title}</b>` : "") + (it.caption || "");
     countEl.textContent = items.length > 1 ? `${i + 1} / ${items.length}` : "";
@@ -475,26 +524,36 @@ const Lightbox = (() => {
   }
 
   function close() {
+    vid.pause();
     el.classList.remove("show");
     document.body.style.overflow = "";
-    setTimeout(() => el.classList.remove("open"), 300);
+    setTimeout(() => { el.classList.remove("open"); dropVideo(); }, 300);
   }
 
   return { open, close };
 })();
 window.Lightbox = Lightbox;
 
-/* ---------- auto-wire any [data-lightbox] gallery on the page ---------- */
+/* ---------- auto-wire any [data-lightbox] on the page ----------
+   A figure that carries a clip opens as that clip. The file is usually still in
+   data-src at this point, because in-page clips are only attached once their
+   block is a screen away, so the viewer reads the same attribute rather than
+   waiting for the block to load. */
 (() => {
   const nodes = [...document.querySelectorAll("[data-lightbox]")];
   if (!nodes.length) return;
-  const items = nodes.map(n => ({
-    src: n.dataset.full || n.querySelector("img")?.src,
-    title: n.dataset.title || "",
-    caption: n.dataset.caption || ""
-  }));
+  const items = nodes.map(n => {
+    const v = n.querySelector("video");
+    const vsrc = v ? (v.dataset.src || v.getAttribute("src") || null) : null;
+    return {
+      src: n.dataset.full || n.querySelector("img")?.src,
+      video: n.dataset.video || vsrc,
+      title: n.dataset.title || "",
+      caption: n.dataset.caption || ""
+    };
+  });
   nodes.forEach((n, idx) => {
-    n.style.cursor = "zoom-in";
+    n.style.cursor = items[idx].video ? "pointer" : "zoom-in";
     n.addEventListener("click", e => { e.preventDefault(); Lightbox.open(items, idx); });
   });
 })();

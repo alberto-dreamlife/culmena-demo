@@ -525,6 +525,11 @@ footer a:hover{color:#fff}
   box-shadow:0 30px 90px rgba(0,0,0,.5);cursor:zoom-in;
   transition:transform .34s cubic-bezier(.2,.7,.2,1),opacity .28s ease;
   transform-origin:center;user-select:none;-webkit-user-drag:none}
+.lb-stage video{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
+  display:block;background:#000}
+/* The hint belongs to stills. A clip arrives with its own controls, and telling
+   someone to click it to zoom would be a lie. */
+.lb.is-video .lb-zoomhint{display:none}
 .lb-stage img.zoomed{cursor:grab;transition:transform .18s ease-out}
 .lb-stage img.zoomed.grabbing{cursor:grabbing;transition:none}
 .lb-close,.lb-prev,.lb-next{position:absolute;z-index:3;border:0;cursor:pointer;color:#fff;
