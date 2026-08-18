@@ -81,7 +81,9 @@
   .cta .btn{flex:1;justify-content:center;padding:14px 10px;min-width:180px}
 
   /* ---------- COMPARE TRAY ---------- */
-  .tray{position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(19,43,46,.97);
+  /* Above the assistant launcher, which also sits at 120: the Compare button
+     lives in the bottom right corner and the launcher was landing on it. */
+  .tray{position:fixed;left:0;right:0;bottom:0;z-index:130;background:rgba(19,43,46,.97);
     backdrop-filter:blur(14px);color:#fff;transform:translateY(110%);
     transition:transform .42s cubic-bezier(.2,.7,.2,1);box-shadow:0 -12px 40px rgba(0,0,0,.28)}
   .tray.up{transform:none}
@@ -511,10 +513,11 @@ function openModal(u){
   dl.href = `assets/plans/${u.p}.pdf`;
   dl.setAttribute("download", `Culmena-Plan-${planDisplay(u.p)}.pdf`);
   modal.classList.add("open");
+  document.body.classList.add("locked");
   tip.style.display = "none";
   syncAddBtn();
 }
-function closeModal(){ modal.classList.remove("open"); }
+function closeModal(){ modal.classList.remove("open"); document.body.classList.remove("locked"); }
 modal.addEventListener("click", e => { if(e.target === modal) closeModal(); });
 document.getElementById("mClose").addEventListener("click", closeModal);
 document.addEventListener("keydown", e => {
@@ -649,12 +652,24 @@ function openCompare(){
   cmp.classList.add("open");
   requestAnimationFrame(()=>cmp.classList.add("show"));
   document.body.style.overflow = "hidden";
+  document.body.classList.add("locked");
 }
 function closeCompare(){
   cmp.classList.remove("show");
   document.body.style.overflow = "";
+  document.body.classList.remove("locked");
   setTimeout(()=>cmp.classList.remove("open"), 320);
 }
+
+/* These three are written inside .page, and .page carries z-index:0 for the
+   Safari tint layer, which makes it a stacking context. Everything inside is
+   pinned at root level 0 however high its own z-index climbs, so the comparison
+   opened under the nav: on a wide window its close cross landed exactly on the
+   Register button, and clicking to close the comparison sent you to the
+   registration form instead. Moving the nodes out to the body once puts their
+   z-index back in the context where it means something. The viewer never had
+   the problem because it builds itself straight onto the body. */
+[modal, cmp, document.getElementById("tray")].forEach(el => el && document.body.appendChild(el));
 goBtn.addEventListener("click", openCompare);
 document.getElementById("cmpClose").addEventListener("click", closeCompare);
 document.addEventListener("keydown", e=>{
