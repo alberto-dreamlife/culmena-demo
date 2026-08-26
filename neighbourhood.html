@@ -12,6 +12,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css?v=20260826a">
+<link rel="stylesheet" href="assets/anim.css?v=20260826b">
+<style>:root{--ax-ink:#1F4348;--ax-accent:#E76F51}</style>
+<script>
+/* What the motion layer may take over on this page. The hero keeps
+   the site's own line reveal, so the splitter is told to skip it. */
+window.AX_CONFIG = {
+  heads: "h2, .display:not(.f-mark)",
+  skip:  ".hero, .ax-skip, .lb, .drawer, footer",
+  figs:  ".frame, figure",
+  stats: ".ax-none",
+  lifts: ".card, .plan-card, .tile"
+};
+</script>
+
 <!-- The map frame is lazy so it does not compete with the header, but warming
      it during idle time means it is drawn by the time anyone scrolls to it. -->
 <link rel="prefetch" href="assets/map.html" as="document">
@@ -501,6 +515,7 @@ c-143 143 -174 167 -192 148z M5781 2295 c-12 -31 -21 -61 -21 -67 0 -42 -163
 })();
 </script>
 <script src="assets/site.js?v=20260826a"></script>
+<script src="assets/anim.js?v=20260826b" defer></script>
 <script src="assets/chat.js?v=20260826a" defer></script>
 </body>
 </html>
