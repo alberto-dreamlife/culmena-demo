@@ -705,3 +705,11 @@ body.menu-open .cb,body.locked .cb{opacity:0;pointer-events:none}
 .cb{--cb-sans:'Inter',system-ui,sans-serif;--cb-display:'Fraunces',serif;
   --cb-accent:#1F4348;--cb-on-accent:#FAF7F1;--cb-paper:#FAF7F1;--cb-ink:#202A29;
   --cb-sand:#F1EBE0;--cb-line:#E3DCCE;--cb-muted:#6E7370;--cb-radius:18px;--cb-bubble:14px}
+
+/* ---------- THE MARK ----------
+   The monogram from the brand board, traced from the artwork so it scales
+   clean. It rides inline with the wordmark and takes its color from the text,
+   so one asset serves the light nav, the dark footer and everything between. */
+.logo,.f-brand .f-mark{display:inline-flex;align-items:center;gap:.55em}
+.lmk{height:1.55em;width:auto;flex:none}
+.f-brand .f-mark .lmk{height:1.45em}
